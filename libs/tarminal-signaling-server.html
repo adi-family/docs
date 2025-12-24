@@ -102,35 +102,12 @@
 
 <p>WebSocket relay server for global sync between Tarminal devices.</p>
 
-<h2>Deploy to Fly.io</h2>
-
-<pre><code class="language-bash">
-<h1>Install flyctl if not already installed</h1>
-<p>brew install flyctl</p>
-
-<h1>Login to Fly.io</h1>
-<p>fly auth login</p>
-
-<h1>Create and deploy the app</h1>
-<p>cd crates/tarminal-signaling-server</p>
-<p>fly launch --name tarminal-signal --no-deploy</p>
-<p>fly deploy</p>
-</code></pre>
-
-<p>Your server will be available at <code>wss://tarminal-signal.fly.dev/ws</code></p>
-
-<h2>Deploy to Other Platforms</h2>
-
-<h3>Docker</h3>
+<h2>Deploy</h2>
 
 <pre><code class="language-bash">
 <p>docker build -t tarminal-signaling .</p>
 <p>docker run -p 8080:8080 tarminal-signaling</p>
 </code></pre>
-
-<h3>Railway / Render</h3>
-
-<p>Just connect your repo and point to this directory. The Dockerfile will be auto-detected.</p>
 
 <h2>Update App URLs</h2>
 
@@ -140,8 +117,6 @@
 <li><code>TarminalNativeiOS/Sources/WebSyncServiceiOS.swift</code></li>
 <li><code>TarminalNative/Sources/WebSyncService.swift</code></li>
 </ul>
-
-<p>Replace <code>wss://tarminal-signal.fly.dev/ws</code> with your actual server URL.</p>
 
 <h2>Protocol</h2>
 
