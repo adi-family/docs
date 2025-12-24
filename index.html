@@ -639,6 +639,14 @@ task_03  low        pending   Update documentation</span>
           <p class="text-gray-400 mb-6">Shared infrastructure libraries powering the ADI ecosystem.</p>
 
           <div class="space-y-4">
+            <a href="libs/lib-github-client.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-github-client</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
+              </div>
+              <p class="text-gray-500 text-sm">Async GitHub API client with pluggable authentication strategies.</p>
+            </a>
+
             <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-embed</h3>
@@ -666,19 +674,6 @@ task_03  low        pending   Update documentation</span>
               <code class="text-xs text-accent-400">cargo add lib-cli-common</code>
             </div>
 
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="text-white font-medium">lib-github-client</h3>
-                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
-              </div>
-              <p class="text-gray-500 text-sm mb-3">Async GitHub API client with pluggable authentication. Supports token, basic, and custom auth strategies. Full coverage of repos, branches, content, releases, and Git Data API.</p>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>use lib_github_client::{Client, token};
-
-let client = Client::new(token("ghp_xxx"))?;
-let repo = client.get_repo("owner", "repo").await?;</code></pre>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -688,13 +683,13 @@ let repo = client.get_repo("owner", "repo").await?;</code></pre>
           <p class="text-gray-400 mb-6">Client libraries and routing for multiple LLM providers.</p>
 
           <div class="space-y-4">
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-llm-providers.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-llm-providers</h3>
                 <span class="px-2 py-0.5 text-xs text-accent-400 bg-accent-500/10 rounded">Featured</span>
               </div>
               <p class="text-gray-500 text-sm mb-3">LLM provider implementations and routing for adi-agent-loop. Supports Claude, OpenAI, and Ollama with advanced routing patterns.</p>
-              <div class="grid grid-cols-2 gap-3 mt-3">
+              <div class="grid grid-cols-2 gap-3">
                 <div class="p-2 rounded bg-dark-700/50 text-center">
                   <div class="text-sm text-white">Providers</div>
                   <div class="text-xs text-gray-500">Claude, OpenAI, Ollama</div>
@@ -704,15 +699,7 @@ let repo = client.get_repo("owner", "repo").await?;</code></pre>
                   <div class="text-xs text-gray-500">Fallback, Cost-Aware, Load-Balanced</div>
                 </div>
               </div>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>use lib_llm_providers::{ClaudeProvider, FallbackProvider};
-
-let fallback = FallbackProvider::new(vec![
-    Arc::new(ClaudeProvider::new("key")),
-    Arc::new(OpenAiProvider::new("key")),
-]);</code></pre>
-              </div>
-            </div>
+            </a>
 
             <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
               <div class="flex items-center justify-between mb-2">
@@ -746,81 +733,53 @@ let fallback = FallbackProvider::new(vec![
           <p class="text-gray-400 mb-6">A complete plugin system with stable ABI, registry, and verification.</p>
 
           <div class="space-y-4">
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-plugin-host.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-host</h3>
                 <span class="px-2 py-0.5 text-xs text-accent-400 bg-accent-500/10 rounded">Main Entry</span>
               </div>
-              <p class="text-gray-500 text-sm mb-3">Plugin host for loading and managing plugins. The main integration crate that applications use. Scans, downloads, loads, and manages plugin lifecycle.</p>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>use lib_plugin_host::{PluginHost, PluginConfig};
+              <p class="text-gray-500 text-sm">Plugin host for loading and managing plugins. Scans, downloads, loads, and manages plugin lifecycle.</p>
+            </a>
 
-let mut host = PluginHost::new(config)?;
-host.scan_installed()?;
-host.install_plugin("vendor.plugin", "1.0.0").await?;
-host.enable("vendor.plugin")?;</code></pre>
-              </div>
-            </div>
-
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-plugin-abi.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-abi</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">ABI</span>
               </div>
-              <p class="text-gray-500 text-sm mb-3">Stable ABI definitions for the plugin system. Uses <code class="text-accent-400">abi_stable</code> for binary compatibility across Rust versions. Defines PluginInfo, PluginVTable, PluginContext, HostVTable.</p>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>use lib_plugin_abi::*;
+              <p class="text-gray-500 text-sm">Stable ABI definitions using abi_stable for binary compatibility across Rust versions.</p>
+            </a>
 
-static VTABLE: PluginVTable = PluginVTable {
-    info: plugin_info,
-    init: plugin_init,
-    cleanup: plugin_cleanup,
-    // ...
-};</code></pre>
-              </div>
-            </div>
-
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-plugin-manifest.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-manifest</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Parser</span>
               </div>
-              <p class="text-gray-500 text-sm mb-3">Plugin manifest parsing. Supports <code class="text-accent-400">plugin.toml</code> (single plugins) and <code class="text-accent-400">package.toml</code> (multi-plugin packages). Handles dependencies and install order.</p>
-            </div>
+              <p class="text-gray-500 text-sm">Plugin manifest parsing for plugin.toml and package.toml files.</p>
+            </a>
 
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-plugin-registry.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-registry</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Client</span>
               </div>
-              <p class="text-gray-500 text-sm mb-3">Plugin registry HTTP client. Async client for fetching plugins from registry servers. Supports caching, search, and progress-tracked downloads.</p>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>let client = RegistryClient::new("https://plugins.adi.dev")
-    .with_cache(PathBuf::from("~/.cache/plugins"));
+              <p class="text-gray-500 text-sm">Plugin registry HTTP client with caching, search, and progress-tracked downloads.</p>
+            </a>
 
-let results = client.search("theme", SearchKind::All).await?;</code></pre>
-              </div>
-            </div>
-
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/lib-plugin-verify.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-verify</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Security</span>
               </div>
-              <p class="text-gray-500 text-sm">Plugin signature and checksum verification. SHA256 checksums for integrity, Ed25519 signatures for authenticity.</p>
-            </div>
+              <p class="text-gray-500 text-sm">Plugin signature and checksum verification with Ed25519 signatures.</p>
+            </a>
 
-            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+            <a href="libs/adi-plugin-registry-http.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">adi-plugin-registry-http</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Server</span>
               </div>
-              <p class="text-gray-500 text-sm mb-3">HTTP server for hosting plugin registries. Docker-ready with search, publish, and download endpoints.</p>
-              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
-                <pre class="text-xs text-gray-300"><code>docker run -d -p 8080:8080 -v registry-data:/data \
-  ghcr.io/mgorunuch/adi-plugin-registry:latest</code></pre>
-              </div>
-            </div>
+              <p class="text-gray-500 text-sm">HTTP server for hosting plugin registries. Docker-ready with search, publish, and download endpoints.</p>
+            </a>
           </div>
         </section>
 

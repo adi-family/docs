@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>adi-plugin-registry-http - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { max-width: 65ch; }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #12121a; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent; padding: 0; color: #d1d5db; font-size: 0.875rem; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Plugin System</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<h1>ADI Plugin Registry</h1>
+
+<p>HTTP server for hosting and distributing plugins and packages.</p>
+
+<h2>Quick Start</h2>
+
+<h3>Docker (Recommended)</h3>
+
+<pre><code class="language-bash">
+<p>docker run -d \</p>
+<p>  --name adi-plugin-registry \</p>
+<p>  -p 8080:8080 \</p>
+<p>  -v registry-data:/data \</p>
+<p>  -e RUST_LOG=info \</p>
+<p>  ghcr.io/mgorunuch/adi-plugin-registry:latest</p>
+</code></pre>
+
+<h3>Docker Compose</h3>
+
+<pre><code class="language-yaml">
+<p>services:</p>
+<p>  plugin-registry:</p>
+<p>    image: ghcr.io/mgorunuch/adi-plugin-registry:latest</p>
+<p>    restart: unless-stopped</p>
+<p>    ports:</p>
+<p>      - "8080:8080"</p>
+<p>    volumes:</p>
+<p>      - registry-data:/data</p>
+<p>    environment:</p>
+<p>      - RUST_LOG=info</p>
+
+<p>volumes:</p>
+<p>  registry-data:</p>
+</code></pre>
+
+<pre><code class="language-bash">
+<p>docker-compose up -d</p>
+</code></pre>
+
+<h3>From Source</h3>
+
+<pre><code class="language-bash">
+<p>cargo build --release -p adi-plugin-registry-http</p>
+<p>./target/release/adi-plugin-registry /path/to/data</p>
+</code></pre>
+
+<h2>Configuration</h2>
+
+<tr><td> Environment Variable </td><td> Default </td><td> Description </td></tr>
+<tr><td>---------------------</td><td>---------</td><td>-------------</td></tr>
+<tr><td> <code>PORT</code> </td><td> <code>8080</code> </td><td> HTTP server port </td></tr>
+<tr><td> <code>REGISTRY_DATA_DIR</code> </td><td> <code>./registry-data</code> </td><td> Data storage directory </td></tr>
+<tr><td> <code>RUST_LOG</code> </td><td> <code>info</code> </td><td> Log level (error, warn, info, debug, trace) </td></tr>
+
+<h2>API Reference</h2>
+
+<h3>Health Check</h3>
+
+<pre><code class="language-bash">
+<p>curl http://localhost:8080/health</p>
+</code></pre>
+
+<p>Response:</p>
+<pre><code class="language-json">
+<p>{</p>
+<p>  "status": "ok",</p>
+<p>  "service": "adi-plugin-registry",</p>
+<p>  "version": "0.8.3"</p>
+<p>}</p>
+</code></pre>
+
+<h3>Get Registry Index</h3>
+
+<p>Returns all packages and plugins in the registry.</p>
+
+<pre><code class="language-bash">
+<p>curl http://localhost:8080/v1/index.json</p>
+</code></pre>
+
+<p>Response:</p>
+<pre><code class="language-json">
+<p>{</p>
+<p>  "version": 1,</p>
+<p>  "updated_at": 1702900000,</p>
+<p>  "packages": [...],</p>
+<p>  "plugins": [...]</p>
+<p>}</p>
+</code></pre>
+
+<h3>Search</h3>
+
+<p>Search for packages and plugins by name, description, or tags.</p>
+
+<pre><code class="language-bash">
+<h1>Search all</h1>
+<p>curl "http://localhost:8080/v1/search?q=theme"</p>
+
+<h1>Search packages only</h1>
+<p>curl "http://localhost:8080/v1/search?q=theme&amp;kind=package"</p>
+
+<h1>Search plugins only</h1>
+<p>curl "http://localhost:8080/v1/search?q=theme&amp;kind=plugin"</p>
+</code></pre>
+
+<p>Response:</p>
+<pre><code class="language-json">
+<p>{</p>
+<p>  "packages": [...],</p>
+<p>  "plugins": [...]</p>
+<p>}</p>
+</code></pre>
+
+<h3>Plugins</h3>
+
+<h4>Get Latest Plugin Version</h4>
+
+<pre><code class="language-bash">
+<p>curl http://localhost:8080/v1/plugins/{plugin-id}/latest.json</p>
+</code></pre>
+
+<h4>Get Specific Plugin Version</h4>
+
+<pre><code class="language-bash">
+<p>curl http://localhost:8080/v1/plugins/{plugin-id}/{version}.json</p>
+</code></pre>
+
+<p>Response:</p>
+<pre><code class="language-json">
+<p>{</p>
+<p>  "id": "my.plugin",</p>
+<p>  "version": "1.0.0",</p>
+<p>  "platforms": [</p>
+<p>    {</p>
+<p>      "platform": "darwin-aarch64",</p>
+<p>      "download_url": "/v1/plugins/my.plugin/1.0.0/darwin-aarch64.tar.gz",</p>
+<p>      "size_bytes": 1024,</p>
+<p>      "checksum": "sha256...",</p>
+<p>      "signature": null</p>
+<p>    }</p>
+<p>  ],</p>
+<p>  "published_at": 1702900000</p>
+<p>}</p>
+</code></pre>
+
+<h4>Download Plugin</h4>
+
+<pre><code class="language-bash">
+<p>curl -O http://localhost:8080/v1/plugins/{plugin-id}/{version}/{platform}.tar.gz</p>
+</code></pre>
+
+<p>Supported platforms:</p>
+<ul>
+<li><code>darwin-aarch64</code> (macOS Apple Silicon)</li>
+<li><code>darwin-x86_64</code> (macOS Intel)</li>
+<li><code>linux-x86_64</code> (Linux 64-bit)</li>
+<li><code>linux-aarch64</code> (Linux ARM64)</li>
+<li><code>windows-x86_64</code> (Windows 64-bit)</li>
+</ul>
+
+<h4>Publish Plugin</h4>
+
+<pre><code class="language-bash">
+<p>curl -X POST \</p>
+<p>  "http://localhost:8080/v1/publish/plugins/{plugin-id}/{version}/{platform}?name=My+Plugin&amp;description=A+cool+plugin&amp;plugin_type=theme&amp;author=yourname&amp;tags=ui,theme" \</p>
+<p>  -F "file=@plugin.tar.gz"</p>
+</code></pre>
+
+<p>Query parameters:</p>
+<tr><td> Parameter </td><td> Required </td><td> Description </td></tr>
+<tr><td>-----------</td><td>----------</td><td>-------------</td></tr>
+<tr><td> <code>name</code> </td><td> Yes </td><td> Display name </td></tr>
+<tr><td> <code>description</code> </td><td> No </td><td> Plugin description </td></tr>
+<tr><td> <code>plugin_type</code> </td><td> No </td><td> Type: theme, extension, font, etc. (default: extension) </td></tr>
+<tr><td> <code>author</code> </td><td> No </td><td> Author name </td></tr>
+<tr><td> <code>tags</code> </td><td> No </td><td> Comma-separated tags </td></tr>
+
+<h3>Packages</h3>
+
+<p>Packages work the same as plugins but use <code>/v1/packages/</code> endpoints:</p>
+
+<pre><code class="language-bash">
+<h1>Get latest</h1>
+<p>curl http://localhost:8080/v1/packages/{package-id}/latest.json</p>
+
+<h1>Get specific version</h1>
+<p>curl http://localhost:8080/v1/packages/{package-id}/{version}.json</p>
+
+<h1>Download</h1>
+<p>curl -O http://localhost:8080/v1/packages/{package-id}/{version}/{platform}.tar.gz</p>
+
+<h1>Publish</h1>
+<p>curl -X POST \</p>
+<p>  "http://localhost:8080/v1/publish/packages/{package-id}/{version}/{platform}?name=My+Package&amp;description=Description&amp;author=yourname" \</p>
+<p>  -F "file=@package.tar.gz"</p>
+</code></pre>
+
+<h2>Usage Examples</h2>
+
+<h3>Publishing a Plugin</h3>
+
+<p>1. Create your plugin tarball:</p>
+<pre><code class="language-bash">
+<p>mkdir my-plugin</p>
+<p>echo '{"name": "my-plugin", "version": "1.0.0"}' > my-plugin/manifest.json</p>
+<h1>Add your plugin files...</h1>
+<p>tar -czf my-plugin.tar.gz my-plugin</p>
+</code></pre>
+
+<p>2. Publish to registry:</p>
+<pre><code class="language-bash">
+<p>curl -X POST \</p>
+<p>  "http://localhost:8080/v1/publish/plugins/com.example.my-plugin/1.0.0/darwin-aarch64?name=My+Plugin&amp;description=An+awesome+plugin&amp;plugin_type=extension&amp;author=developer" \</p>
+<p>  -F "file=@my-plugin.tar.gz"</p>
+</code></pre>
+
+<p>3. Verify publication:</p>
+<pre><code class="language-bash">
+<p>curl http://localhost:8080/v1/plugins/com.example.my-plugin/latest.json</p>
+</code></pre>
+
+<h3>Downloading a Plugin</h3>
+
+<pre><code class="language-bash">
+<h1>Get plugin info</h1>
+<p>curl http://localhost:8080/v1/plugins/com.example.my-plugin/latest.json</p>
+
+<h1>Download</h1>
+<p>curl -O http://localhost:8080/v1/plugins/com.example.my-plugin/1.0.0/darwin-aarch64.tar.gz</p>
+
+<h1>Extract</h1>
+<p>tar -xzf darwin-aarch64.tar.gz</p>
+</code></pre>
+
+<h3>Using with lib-plugin-registry Client</h3>
+
+<pre><code class="language-rust">
+<p>use lib_plugin_registry::{RegistryClient, SearchKind};</p>
+<p>use std::path::PathBuf;</p>
+
+<p>#[tokio::main]</p>
+<p>async fn main() -> Result<(), Box<dyn std::error::Error>> {</p>
+<p>    let client = RegistryClient::new("http://localhost:8080")</p>
+<p>        .with_cache(PathBuf::from("~/.cache/plugins"));</p>
+
+<p>    // Search for plugins</p>
+<p>    let results = client.search("theme", SearchKind::PluginsOnly).await?;</p>
+<p>    for plugin in results.plugins {</p>
+<p>        println!("{}: {}", plugin.id, plugin.name);</p>
+<p>    }</p>
+
+<p>    // Download a plugin</p>
+<p>    let bytes = client.download_plugin(</p>
+<p>        "com.example.theme",</p>
+<p>        "1.0.0",</p>
+<p>        "darwin-aarch64",</p>
+<p>        </td><td>done, total</td><td> println!("Progress: {}/{}", done, total)</p>
+<p>    ).await?;</p>
+
+<p>    // Save to file</p>
+<p>    std::fs::write("theme.tar.gz", bytes)?;</p>
+
+<p>    Ok(())</p>
+<p>}</p>
+</code></pre>
+
+<h2>Production Deployment</h2>
+
+<h3>With Nginx Reverse Proxy</h3>
+
+<pre><code class="language-nginx">
+<p>server {</p>
+<p>    listen 443 ssl;</p>
+<p>    server_name plugins.example.com;</p>
+
+<p>    ssl_certificate /etc/letsencrypt/live/plugins.example.com/fullchain.pem;</p>
+<p>    ssl_certificate_key /etc/letsencrypt/live/plugins.example.com/privkey.pem;</p>
+
+<p>    location / {</p>
+<p>        proxy_pass http://127.0.0.1:8080;</p>
+<p>        proxy_set_header Host $host;</p>
+<p>        proxy_set_header X-Real-IP $remote_addr;</p>
+<p>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</p>
+<p>        proxy_set_header X-Forwarded-Proto $scheme;</p>
+
+<p>        # For large plugin uploads</p>
+<p>        client_max_body_size 100M;</p>
+<p>    }</p>
+<p>}</p>
+</code></pre>
+
+<h3>With Docker Compose + Traefik</h3>
+
+<pre><code class="language-yaml">
+<p>services:</p>
+<p>  plugin-registry:</p>
+<p>    image: ghcr.io/mgorunuch/adi-plugin-registry:latest</p>
+<p>    restart: unless-stopped</p>
+<p>    volumes:</p>
+<p>      - registry-data:/data</p>
+<p>    environment:</p>
+<p>      - RUST_LOG=info</p>
+<p>    labels:</p>
+<p>      - "traefik.enable=true"</p>
+<p>      - "traefik.http.routers.registry.rule=Host(<code>plugins.example.com</code>)"</p>
+<p>      - "traefik.http.routers.registry.tls.certresolver=letsencrypt"</p>
+<p>      - "traefik.http.services.registry.loadbalancer.server.port=8080"</p>
+
+<p>volumes:</p>
+<p>  registry-data:</p>
+</code></pre>
+
+<h3>Backup</h3>
+
+<p>The registry stores all data in the <code>/data</code> volume:</p>
+
+<pre><code class="language-bash">
+<h1>Backup</h1>
+<p>docker run --rm -v registry-data:/data -v $(pwd):/backup alpine \</p>
+<p>  tar czf /backup/registry-backup.tar.gz /data</p>
+
+<h1>Restore</h1>
+<p>docker run --rm -v registry-data:/data -v $(pwd):/backup alpine \</p>
+<p>  tar xzf /backup/registry-backup.tar.gz -C /</p>
+</code></pre>
+
+<h2>Data Structure</h2>
+
+<pre><code class="language-text">
+<p>/data</p>
+<p>├── index.json           # Registry index</p>
+<p>├── packages/</p>
+<p>│   └── {package-id}/</p>
+<p>│       └── {version}/</p>
+<p>│           ├── info.json</p>
+<p>│           └── {platform}.tar.gz</p>
+<p>└── plugins/</p>
+<p>    └── {plugin-id}/</p>
+<p>        └── {version}/</p>
+<p>            ├── info.json</p>
+<p>            └── {platform}.tar.gz</p>
+</code></pre>
+
+<h2>License</h2>
+
+<p>BSL-1.0</p>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

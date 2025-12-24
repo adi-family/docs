@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>adi-executor - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { max-width: 65ch; }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #12121a; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent; padding: 0; color: #d1d5db; font-size: 0.875rem; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Executor</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<p>adi-executor, rust, docker, task-runner, async-jobs, http-api</p>
+
+<h2>Overview</h2>
+<ul>
+<li>Docker-based task execution service with async job management</li>
+<li>Runs ANY Docker image - no special worker code required in user images</li>
+<li>Injects <code>adi-worker</code> binary into containers via volume mount</li>
+<li>Simple entrypoint-based execution (no HTTP/socket communication)</li>
+<li>Supports output handlers (GitHub branch push, webhooks)</li>
+</ul>
+
+<h2>Architecture</h2>
+
+<pre><code class="language-text">
+<p>┌────────────────────────────────────────────────────────┐</p>
+<p>│  User Container (any Docker image)                     │</p>
+<p>│                                                        │</p>
+<p>│  Mounts (injected by executor):                        │</p>
+<p>│  - /usr/local/bin/adi-worker  (worker binary)          │</p>
+<p>│  - /adi/input/request.json    (WorkerRequest)          │</p>
+<p>│  - /adi/output/               (artifacts dir)          │</p>
+<p>│                                                        │</p>
+<p>│  ENTRYPOINT: /usr/local/bin/adi-worker                 │</p>
+<p>│  ENV: ORIGINAL_CMD=<from image inspect>                │</p>
+<p>└────────────────────────────────────────────────────────┘</p>
+</code></pre>
+
+<h2>How It Works</h2>
+<p>1. Executor pulls user's Docker image</p>
+<p>2. Inspects image to get original CMD/ENTRYPOINT</p>
+<p>3. Creates container with adi-worker as entrypoint</p>
+<p>4. Mounts: worker binary, input JSON, output dir</p>
+<p>5. Container starts, adi-worker reads input, executes original command</p>
+<p>6. User's command reads input, writes files to /adi/output/</p>
+<p>7. adi-worker collects output files, writes response.json, exits</p>
+<p>8. Executor waits for container exit, reads /adi/output/response.json</p>
+
+<h2>API Endpoints</h2>
+<ul>
+<li><code>POST /v1/verify</code> - Verify Docker package is accessible</li>
+<li><code>POST /v1/run</code> - Submit job for async execution, returns job_id</li>
+<li><code>GET /v1/jobs</code> - List all jobs</li>
+<li><code>GET /v1/jobs/:id</code> - Get job status and result</li>
+</ul>
+
+<h2>Environment Variables (in container)</h2>
+<ul>
+<li><code>JOB_ID</code> - Unique job identifier</li>
+<li><code>ORIGINAL_CMD</code> - Original image CMD/ENTRYPOINT to execute</li>
+</ul>
+
+<h2>Input/Output Convention</h2>
+<ul>
+<li>Input: <code>/adi/input/request.json</code> contains WorkerRequest</li>
+<li>Output: Place files in <code>/adi/output/</code> directory</li>
+<li>Response: <code>/adi/output/response.json</code> written by adi-worker</li>
+<li>Stdout/stderr: Captured and returned in response</li>
+</ul>
+
+<h2>Request/Response Types</h2>
+
+<h3>Package (tagged enum by <code>type</code>)</h3>
+<pre><code class="language-json">
+<p>{ "type": "github/public", "image": "org/worker:v1" }</p>
+<p>{ "type": "github/private", "image": "org/worker:v1", "user": "...", "token": "ghp_..." }</p>
+<p>{ "type": "dockerhub/public", "image": "org/worker:v1" }</p>
+<p>{ "type": "dockerhub/private", "image": "org/worker:v1", "user": "...", "password": "..." }</p>
+<p>{ "type": "registry/public", "url": "registry.example.com/worker:v1" }</p>
+<p>{ "type": "registry/private", "url": "registry.example.com/worker:v1", "user": "...", "password": "..." }</p>
+</code></pre>
+
+<h3>WorkerRequest</h3>
+<pre><code class="language-json">
+<p>{ "type": "message", "message": "..." }</p>
+</code></pre>
+
+<h3>OutputConfig</h3>
+<pre><code class="language-json">
+<p>{ "type": "github_branch", "repo": "org/repo", "branch": "feature", "token": "ghp_..." }</p>
+<p>{ "type": "webhook", "url": "https://example.com/hook", "headers": {...} }</p>
+</code></pre>
+
+<h3>WorkerResponse</h3>
+<pre><code class="language-json">
+<p>{ "success": true, "data": {...}, "files": [{ "path": "...", "content": "...", "binary": false }] }</p>
+</code></pre>
+
+<h2>Building</h2>
+<pre><code class="language-bash">
+<p>cargo build -p adi-executor -p adi-worker</p>
+<p>cargo run -p adi-executor  # Starts on port 3000</p>
+<p>PORT=8080 cargo run -p adi-executor</p>
+</code></pre>
+
+<h2>Cross-compiling adi-worker for containers</h2>
+<pre><code class="language-bash">
+<p>cross build -p adi-worker --release --target x86_64-unknown-linux-musl</p>
+<p>cross build -p adi-worker --release --target aarch64-unknown-linux-musl</p>
+</code></pre>
+
+<h2>Configuration</h2>
+<ul>
+<li><code>ADI_WORKER_BINARY</code> - Path to adi-worker binary (auto-detected if not set)</li>
+<li><code>ADI_WORKER_BINARY_X86_64</code> - Path to x86_64 worker binary</li>
+<li><code>ADI_WORKER_BINARY_AARCH64</code> - Path to aarch64 worker binary</li>
+</ul>
+
+<h2>Code Structure</h2>
+<ul>
+<li><code>docker/</code> - Docker client for container lifecycle</li>
+<li><code>output/</code> - Output handlers (GitHub, webhooks)</li>
+<li><code>store/</code> - In-memory job store with DashMap</li>
+<li><code>api/</code> - Axum HTTP routes</li>
+<li><code>executor.rs</code> - Core orchestration logic</li>
+</ul>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

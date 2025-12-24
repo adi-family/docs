@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>adi-knowledgebase-mcp - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { max-width: 65ch; }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #12121a; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent; padding: 0; color: #d1d5db; font-size: 0.875rem; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Knowledgebase</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<p>adi-knowledgebase-mcp, rust, mcp, claude-code, knowledge-management</p>
+
+<h2>Overview</h2>
+<ul>
+<li>MCP server for ADI Knowledgebase</li>
+<li>Enables Claude Code integration via JSON-RPC</li>
+<li>Provides tools for knowledge management</li>
+</ul>
+
+<h2>MCP Tools</h2>
+<ul>
+<li><code>kb_add</code> - Add knowledge (requires user_said + derived_knowledge)</li>
+<li><code>kb_query</code> - Query the knowledgebase</li>
+<li><code>kb_approve</code> - Approve a node (confidence = 1.0)</li>
+<li><code>kb_clarify</code> - Request clarification</li>
+<li><code>kb_conflicts</code> - Show conflicts</li>
+<li><code>kb_ask</code> - System asks user a question</li>
+<li><code>kb_get</code> - Get node by ID</li>
+<li><code>kb_delete</code> - Delete a node</li>
+<li><code>kb_link</code> - Create edge between nodes</li>
+<li><code>kb_subgraph</code> - Get subgraph for agent consumption</li>
+</ul>
+
+<h2>Protocol</h2>
+<ul>
+<li>JSON-RPC 2.0 over stdin/stdout</li>
+<li>MCP protocol version: 2024-11-05</li>
+</ul>
+
+<h2>Dependencies</h2>
+<ul>
+<li><code>adi-knowledgebase-core</code> - Core library</li>
+</ul>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
