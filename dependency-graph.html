@@ -336,7 +336,7 @@
       // Core/Shared libraries (no dependencies)
       { id: "lib-cli-common", category: "shared", label: "lib-cli-common" },
       { id: "lib-migrations", category: "shared", label: "lib-migrations" },
-      { id: "lib-color", category: "ui", label: "lib-color" },
+      { id: "lib-misc-color", category: "ui", label: "lib-misc-color" },
       { id: "lib-animation", category: "ui", label: "lib-animation" },
       { id: "lib-syntax-highlight", category: "ui", label: "lib-syntax-highlight" },
       { id: "lib-json-tree", category: "ui", label: "lib-json-tree" },
@@ -365,9 +365,6 @@
       { id: "adi-tasks-core", category: "component", label: "adi-tasks-core" },
       { id: "adi-knowledgebase-core", category: "component", label: "adi-knowledgebase-core" },
       { id: "adi-agent-loop-core", category: "component", label: "adi-agent-loop-core" },
-
-      // LLM providers
-      { id: "lib-llm-providers", category: "core", label: "lib-llm-providers" },
 
       // Interfaces - Indexer
       { id: "adi-indexer-cli", category: "interface", label: "adi-indexer-cli" },
@@ -403,8 +400,8 @@
       // lib-embed -> lib-cli-common
       { source: "lib-embed", target: "lib-cli-common" },
 
-      // lib-terminal-theme -> lib-color
-      { source: "lib-terminal-theme", target: "lib-color" },
+      // lib-terminal-theme -> lib-misc-color
+      { source: "lib-terminal-theme", target: "lib-misc-color" },
 
       // lib-iced-ui -> lib-terminal-theme
       { source: "lib-iced-ui", target: "lib-terminal-theme" },
@@ -432,9 +429,6 @@
 
       // adi-agent-loop-core -> lib-migrations
       { source: "adi-agent-loop-core", target: "lib-migrations" },
-
-      // lib-llm-providers -> adi-agent-loop-core
-      { source: "lib-llm-providers", target: "adi-agent-loop-core" },
 
       // Indexer interfaces -> adi-indexer-core
       { source: "adi-indexer-cli", target: "adi-indexer-core" },

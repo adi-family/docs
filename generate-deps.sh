@@ -11,7 +11,7 @@ CRATES_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")/crates"
 get_category() {
     local name="$1"
     case "$name" in
-        adi-cli|adi-executor|lib-llm-providers)
+        adi-cli|adi-executor)
             echo "core"
             ;;
         lib-cli-common|lib-migrations|lib-embed)
@@ -29,7 +29,7 @@ get_category() {
         adi-plugin-*)
             echo "plugin"
             ;;
-        lib-color|lib-animation|lib-syntax-highlight|lib-terminal-*|lib-json-tree|lib-iced-ui)
+        lib-misc-color|lib-animation|lib-syntax-highlight|lib-terminal-*|lib-json-tree|lib-iced-ui)
             echo "ui"
             ;;
         lib-github-client|lib-anthropic-client|lib-openai-client|lib-ollama-client)

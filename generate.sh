@@ -263,7 +263,7 @@ get_badge() {
     case "$name" in
         lib-plugin-*|adi-plugin-registry-http) echo "Plugin System" ;;
         lib-llm-*|lib-anthropic-*|lib-openai-*|lib-ollama-*) echo "LLM" ;;
-        lib-color|lib-animation|lib-terminal-*|lib-syntax-*|lib-json-*|lib-iced-*|debug-metal-*) echo "UI" ;;
+        lib-misc-color|lib-animation|lib-terminal-*|lib-syntax-*|lib-json-*|lib-iced-*|debug-metal-*) echo "UI" ;;
         adi-indexer-*) echo "Indexer" ;;
         adi-knowledgebase-*) echo "Knowledgebase" ;;
         adi-tasks-*) echo "Tasks" ;;
