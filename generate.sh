@@ -184,9 +184,53 @@ convert_md_to_html() {
     sed 's/^- \(.*\)$/<li>\1<\/li>/' | \
     sed 's/^  - \(.*\)$/<li>\1<\/li>/' | \
     sed 's/^\* \(.*\)$/<li>\1<\/li>/' | \
-    # Tables (basic support)
-    sed 's/^|\(.*\)|$/<tr><td>\1<\/td><\/tr>/' | \
-    sed 's/|/<\/td><td>/g' | \
+    # Tables (proper markdown table support)
+    awk '
+    BEGIN { in_table = 0; is_header = 1 }
+    /^\|.*\|$/ {
+        # Skip separator rows (|---|---|)
+        if ($0 ~ /^\|[-: |]+\|$/) {
+            is_header = 0
+            next
+        }
+        if (!in_table) {
+            print "<table>"
+            in_table = 1
+            is_header = 1
+        }
+        # Remove leading/trailing pipes and split
+        gsub(/^\||\|$/, "")
+        n = split($0, cells, "|")
+        if (is_header) {
+            print "<thead><tr>"
+            for (i = 1; i <= n; i++) {
+                gsub(/^[ \t]+|[ \t]+$/, "", cells[i])
+                print "<th>" cells[i] "</th>"
+            }
+            print "</tr></thead><tbody>"
+            is_header = 0
+        } else {
+            print "<tr>"
+            for (i = 1; i <= n; i++) {
+                gsub(/^[ \t]+|[ \t]+$/, "", cells[i])
+                print "<td>" cells[i] "</td>"
+            }
+            print "</tr>"
+        }
+        next
+    }
+    {
+        if (in_table) {
+            print "</tbody></table>"
+            in_table = 0
+            is_header = 1
+        }
+        print
+    }
+    END {
+        if (in_table) print "</tbody></table>"
+    }
+    ' | \
     # Wrap paragraphs (lines that don't start with < and aren't empty)
     awk '
     {

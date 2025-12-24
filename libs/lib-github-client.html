@@ -196,11 +196,24 @@
 
 <h3>Repository Operations</h3>
 
-<tr><td> Method </td><td> Description </td></tr>
-<tr><td>--------</td><td>-------------</td></tr>
-<tr><td> <code>get_repo(owner, repo)</code> </td><td> Get repository details </td></tr>
-<tr><td> <code>list_branches(owner, repo)</code> </td><td> List all branches </td></tr>
-<tr><td> <code>get_branch(owner, repo, branch)</code> </td><td> Get specific branch </td></tr>
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_repo(owner, repo)</code></td>
+<td>Get repository details</td>
+</tr>
+<tr>
+<td><code>list_branches(owner, repo)</code></td>
+<td>List all branches</td>
+</tr>
+<tr>
+<td><code>get_branch(owner, repo, branch)</code></td>
+<td>Get specific branch</td>
+</tr>
+</tbody></table>
 
 <pre><code class="language-rust">
 <p>let repo = client.get_repo("owner", "repo").await?;</p>
@@ -210,10 +223,20 @@
 
 <h3>Content Operations</h3>
 
-<tr><td> Method </td><td> Description </td></tr>
-<tr><td>--------</td><td>-------------</td></tr>
-<tr><td> <code>get_content(owner, repo, path, ref)</code> </td><td> Get file content </td></tr>
-<tr><td> <code>create_or_update_file(...)</code> </td><td> Create or update a file </td></tr>
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_content(owner, repo, path, ref)</code></td>
+<td>Get file content</td>
+</tr>
+<tr>
+<td><code>create_or_update_file(...)</code></td>
+<td>Create or update a file</td>
+</tr>
+</tbody></table>
 
 <pre><code class="language-rust">
 <p>// Get file from specific branch</p>
@@ -240,14 +263,36 @@
 
 <h3>Git Data Operations</h3>
 
-<tr><td> Method </td><td> Description </td></tr>
-<tr><td>--------</td><td>-------------</td></tr>
-<tr><td> <code>get_ref(owner, repo, ref_path)</code> </td><td> Get a git reference </td></tr>
-<tr><td> <code>create_ref(owner, repo, ref_name, sha)</code> </td><td> Create a reference </td></tr>
-<tr><td> <code>update_ref(owner, repo, ref_path, sha, force)</code> </td><td> Update a reference </td></tr>
-<tr><td> <code>get_tree(owner, repo, tree_sha, recursive)</code> </td><td> Get a tree </td></tr>
-<tr><td> <code>create_tree(owner, repo, base_tree, entries)</code> </td><td> Create a tree </td></tr>
-<tr><td> <code>create_commit(owner, repo, message, tree_sha, parents)</code> </td><td> Create a commit </td></tr>
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_ref(owner, repo, ref_path)</code></td>
+<td>Get a git reference</td>
+</tr>
+<tr>
+<td><code>create_ref(owner, repo, ref_name, sha)</code></td>
+<td>Create a reference</td>
+</tr>
+<tr>
+<td><code>update_ref(owner, repo, ref_path, sha, force)</code></td>
+<td>Update a reference</td>
+</tr>
+<tr>
+<td><code>get_tree(owner, repo, tree_sha, recursive)</code></td>
+<td>Get a tree</td>
+</tr>
+<tr>
+<td><code>create_tree(owner, repo, base_tree, entries)</code></td>
+<td>Create a tree</td>
+</tr>
+<tr>
+<td><code>create_commit(owner, repo, message, tree_sha, parents)</code></td>
+<td>Create a commit</td>
+</tr>
+</tbody></table>
 
 <pre><code class="language-rust">
 <p>// Get branch ref</p>
@@ -286,9 +331,16 @@
 
 <h3>User Operations</h3>
 
-<tr><td> Method </td><td> Description </td></tr>
-<tr><td>--------</td><td>-------------</td></tr>
-<tr><td> <code>get_authenticated_user()</code> </td><td> Get current authenticated user </td></tr>
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_authenticated_user()</code></td>
+<td>Get current authenticated user</td>
+</tr>
+</tbody></table>
 
 <pre><code class="language-rust">
 <p>let user = client.get_authenticated_user().await?;</p>
@@ -297,13 +349,32 @@
 
 <h3>Release Operations</h3>
 
-<tr><td> Method </td><td> Description </td></tr>
-<tr><td>--------</td><td>-------------</td></tr>
-<tr><td> <code>list_releases(owner, repo)</code> </td><td> List all releases </td></tr>
-<tr><td> <code>get_latest_release(owner, repo)</code> </td><td> Get latest release </td></tr>
-<tr><td> <code>get_release_by_tag(owner, repo, tag)</code> </td><td> Get release by tag </td></tr>
-<tr><td> <code>list_release_assets(owner, repo, release_id)</code> </td><td> List release assets </td></tr>
-<tr><td> <code>download_asset(url)</code> </td><td> Download asset binary </td></tr>
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>list_releases(owner, repo)</code></td>
+<td>List all releases</td>
+</tr>
+<tr>
+<td><code>get_latest_release(owner, repo)</code></td>
+<td>Get latest release</td>
+</tr>
+<tr>
+<td><code>get_release_by_tag(owner, repo, tag)</code></td>
+<td>Get release by tag</td>
+</tr>
+<tr>
+<td><code>list_release_assets(owner, repo, release_id)</code></td>
+<td>List release assets</td>
+</tr>
+<tr>
+<td><code>download_asset(url)</code></td>
+<td>Download asset binary</td>
+</tr>
+</tbody></table>
 
 <pre><code class="language-rust">
 <p>// Get latest release</p>
@@ -470,15 +541,40 @@
 
 <h3>Error Types</h3>
 
-<tr><td> Error </td><td> Description </td></tr>
-<tr><td>-------</td><td>-------------</td></tr>
-<tr><td> <code>Request</code> </td><td> HTTP transport error </td></tr>
-<tr><td> <code>Api { status, message }</code> </td><td> GitHub API error response </td></tr>
-<tr><td> <code>RateLimited { retry_after }</code> </td><td> Rate limit exceeded </td></tr>
-<tr><td> <code>NotFound</code> </td><td> Resource not found (404) </td></tr>
-<tr><td> <code>Unauthorized</code> </td><td> Invalid or expired token (401) </td></tr>
-<tr><td> <code>Forbidden</code> </td><td> Insufficient permissions (403) </td></tr>
-<tr><td> <code>Json</code> </td><td> JSON parsing error </td></tr>
+<table>
+<thead><tr>
+<th>Error</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>Request</code></td>
+<td>HTTP transport error</td>
+</tr>
+<tr>
+<td><code>Api { status, message }</code></td>
+<td>GitHub API error response</td>
+</tr>
+<tr>
+<td><code>RateLimited { retry_after }</code></td>
+<td>Rate limit exceeded</td>
+</tr>
+<tr>
+<td><code>NotFound</code></td>
+<td>Resource not found (404)</td>
+</tr>
+<tr>
+<td><code>Unauthorized</code></td>
+<td>Invalid or expired token (401)</td>
+</tr>
+<tr>
+<td><code>Forbidden</code></td>
+<td>Insufficient permissions (403)</td>
+</tr>
+<tr>
+<td><code>Json</code></td>
+<td>JSON parsing error</td>
+</tr>
+</tbody></table>
 
 <h2>License</h2>
 

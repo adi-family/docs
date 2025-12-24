@@ -146,11 +146,28 @@
 
 <h2>Configuration</h2>
 
-<tr><td> Environment Variable </td><td> Default </td><td> Description </td></tr>
-<tr><td>---------------------</td><td>---------</td><td>-------------</td></tr>
-<tr><td> <code>PORT</code> </td><td> <code>8080</code> </td><td> HTTP server port </td></tr>
-<tr><td> <code>REGISTRY_DATA_DIR</code> </td><td> <code>./registry-data</code> </td><td> Data storage directory </td></tr>
-<tr><td> <code>RUST_LOG</code> </td><td> <code>info</code> </td><td> Log level (error, warn, info, debug, trace) </td></tr>
+<table>
+<thead><tr>
+<th>Environment Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>PORT</code></td>
+<td><code>8080</code></td>
+<td>HTTP server port</td>
+</tr>
+<tr>
+<td><code>REGISTRY_DATA_DIR</code></td>
+<td><code>./registry-data</code></td>
+<td>Data storage directory</td>
+</tr>
+<tr>
+<td><code>RUST_LOG</code></td>
+<td><code>info</code></td>
+<td>Log level (error, warn, info, debug, trace)</td>
+</tr>
+</tbody></table>
 
 <h2>API Reference</h2>
 
@@ -266,13 +283,38 @@
 </code></pre>
 
 <p>Query parameters:</p>
-<tr><td> Parameter </td><td> Required </td><td> Description </td></tr>
-<tr><td>-----------</td><td>----------</td><td>-------------</td></tr>
-<tr><td> <code>name</code> </td><td> Yes </td><td> Display name </td></tr>
-<tr><td> <code>description</code> </td><td> No </td><td> Plugin description </td></tr>
-<tr><td> <code>plugin_type</code> </td><td> No </td><td> Type: theme, extension, font, etc. (default: extension) </td></tr>
-<tr><td> <code>author</code> </td><td> No </td><td> Author name </td></tr>
-<tr><td> <code>tags</code> </td><td> No </td><td> Comma-separated tags </td></tr>
+<table>
+<thead><tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>name</code></td>
+<td>Yes</td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>No</td>
+<td>Plugin description</td>
+</tr>
+<tr>
+<td><code>plugin_type</code></td>
+<td>No</td>
+<td>Type: theme, extension, font, etc. (default: extension)</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>No</td>
+<td>Author name</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>No</td>
+<td>Comma-separated tags</td>
+</tr>
+</tbody></table>
 
 <h3>Packages</h3>
 
@@ -353,7 +395,7 @@
 <p>        "com.example.theme",</p>
 <p>        "1.0.0",</p>
 <p>        "darwin-aarch64",</p>
-<p>        </td><td>done, total</td><td> println!("Progress: {}/{}", done, total)</p>
+<p>        |done, total| println!("Progress: {}/{}", done, total)</p>
 <p>    ).await?;</p>
 
 <p>    // Save to file</p>
