@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dependency Graph - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              900: '#0a0a0f',
+              800: '#12121a',
+              700: '#1a1a24',
+              600: '#22222e',
+            },
+            accent: {
+              500: '#8b5cf6',
+              400: '#a78bfa',
+              300: '#c4b5fd',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+
+    .glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.15); }
+    .glow-text { text-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+
+    .glass {
+      background: rgba(26, 26, 36, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .gradient-border {
+      position: relative;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    .sidebar-link {
+      transition: all 0.2s ease;
+    }
+    .sidebar-link:hover {
+      background: rgba(139, 92, 246, 0.1);
+      color: #a78bfa;
+      padding-left: 1.25rem;
+    }
+    .sidebar-link.active {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      border-left: 2px solid #8b5cf6;
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a2a38; }
+
+    /* Graph styles */
+    .node circle {
+      stroke-width: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .node circle:hover {
+      stroke-width: 3px;
+    }
+    .node text {
+      font-size: 10px;
+      pointer-events: none;
+      fill: #9ca3af;
+    }
+    .node.highlighted circle {
+      stroke-width: 3px;
+      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+    }
+    .node.highlighted text {
+      fill: white;
+      font-weight: 500;
+    }
+    .node.dimmed circle {
+      opacity: 0.2;
+    }
+    .node.dimmed text {
+      opacity: 0.2;
+    }
+    .link {
+      stroke: #374151;
+      stroke-opacity: 0.6;
+      fill: none;
+    }
+    .link.highlighted {
+      stroke: #8b5cf6;
+      stroke-opacity: 1;
+      stroke-width: 2px;
+    }
+    .link.dimmed {
+      stroke-opacity: 0.1;
+    }
+    .arrowhead {
+      fill: #374151;
+    }
+    .arrowhead.highlighted {
+      fill: #8b5cf6;
+    }
+
+    /* Legend */
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <!-- Gradient orbs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-20 right-1/4 w-60 h-60 bg-accent-500/10 rounded-full blur-[80px]"></div>
+  </div>
+
+  <div class="relative min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="fixed top-0 left-0 h-screen w-64 glass border-r border-white/5 z-40">
+      <div class="p-6 border-b border-white/5">
+        <a href="index.html" class="flex items-center gap-3">
+          <svg class="w-8 h-8" viewBox="0 0 714 740" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 506.667H233.551V740H0V506.667Z" fill="#232032"/>
+            <path d="M346.991 486.667H222.376C225.259 480.604 226.879 473.825 226.879 466.667C226.879 440.893 205.966 420 180.168 420C154.371 420 133.458 440.893 133.458 466.667C133.458 473.825 135.078 480.604 137.961 486.667H113.439V253.333H346.991V486.667Z" fill="#382D65"/>
+            <path d="M213.533 466.667C213.533 480 197.154 506.667 213.533 506.667C208.82 518.296 186.139 520 179.562 520C172.984 520 151.517 518.296 146.804 506.667C163.183 506.667 146.804 486.667 146.804 466.667C146.804 446.667 160.15 433.333 180.168 433.333C200.187 433.333 213.533 446.667 213.533 466.667Z" fill="#232032"/>
+            <path d="M473.776 233.333H342.488C345.371 227.271 346.991 220.492 346.991 213.333C346.991 187.56 326.078 166.667 300.28 166.667C274.483 166.667 253.57 187.56 253.57 213.333C253.57 220.492 255.19 227.271 258.073 233.333H240.224V0H473.776V233.333Z" fill="#4E3B9B"/>
+            <path d="M333.645 213.333C333.645 226.667 317.266 253.333 333.645 253.333C328.932 264.963 306.251 266.667 299.674 266.667C293.097 266.667 271.629 264.963 266.916 253.333C283.295 253.333 266.916 233.333 266.916 213.333C266.916 193.333 280.262 180 300.28 180C320.299 180 333.645 193.333 333.645 213.333Z" fill="#382D65"/>
+            <path d="M384.858 253.333C381.975 259.396 380.355 266.175 380.355 273.333C380.355 299.107 401.268 320 427.065 320C452.863 320 473.776 299.107 473.776 273.333C473.776 266.175 472.156 259.396 469.273 253.333H600.561V486.667H367.009V253.333H384.858Z" fill="#6349CF"/>
+            <path d="M393.701 273.333C393.701 260 410.08 233.333 393.701 233.333C398.414 221.704 421.095 220 427.672 220C434.249 220 455.717 221.704 460.43 233.333C444.051 233.333 460.43 253.333 460.43 273.333C460.43 293.333 447.084 306.667 427.065 306.667C407.047 306.667 393.701 293.333 393.701 273.333Z" fill="#4E3B9B"/>
+            <path d="M504.97 506.667C502.087 512.729 500.467 519.508 500.467 526.667C500.467 552.44 521.38 573.333 547.178 573.333C572.975 573.333 593.888 552.44 593.888 526.667C593.888 519.508 592.268 512.729 589.385 506.667H714V740H480.449V506.667H504.97Z" fill="#7755FF"/>
+            <path d="M513.813 526.667C513.813 513.333 530.192 486.667 513.813 486.667C518.526 475.037 541.207 473.333 547.784 473.333C554.361 473.333 575.829 475.037 580.542 486.667C564.163 486.667 580.542 506.667 580.542 526.667C580.542 546.667 567.196 560 547.178 560C527.159 560 513.813 546.667 513.813 526.667Z" fill="#6349CF"/>
+          </svg>
+          <span class="text-lg font-semibold text-white">adi-family</span>
+        </a>
+      </div>
+
+      <nav class="p-4 space-y-1 text-sm overflow-y-auto" style="max-height: calc(100vh - 180px);">
+        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Getting Started</div>
+        <a href="index.html#introduction" class="sidebar-link block px-3 py-2 rounded-lg">Introduction</a>
+        <a href="index.html#installation" class="sidebar-link block px-3 py-2 rounded-lg">Installation</a>
+
+        <div class="px-3 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Architecture</div>
+        <a href="dependency-graph.html" class="sidebar-link active block px-3 py-2 rounded-lg">Dependency Graph</a>
+
+        <div class="px-3 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Libraries</div>
+        <a href="index.html#lib-core" class="sidebar-link block px-3 py-2 rounded-lg">Core Libraries</a>
+        <a href="index.html#lib-llm" class="sidebar-link block px-3 py-2 rounded-lg">LLM Providers</a>
+        <a href="index.html#lib-plugin" class="sidebar-link block px-3 py-2 rounded-lg">Plugin System</a>
+        <a href="index.html#lib-ui" class="sidebar-link block px-3 py-2 rounded-lg">UI Libraries</a>
+      </nav>
+
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/5">
+        <a href="https://github.com/adi-family" target="_blank" class="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-300 transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 ml-64">
+      <!-- Header -->
+      <header class="sticky top-0 z-30 glass border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <h1 class="text-lg font-semibold text-white">Dependency Graph</h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">v0.8.4</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="max-w-6xl mx-auto px-8 py-8">
+        <div class="mb-6">
+          <p class="text-gray-400 mb-4">
+            Interactive visualization of dependencies between ADI crates. Click on a node to highlight its dependencies and dependents. Drag nodes to rearrange the layout.
+          </p>
+
+          <!-- Legend -->
+          <div class="flex flex-wrap gap-6 p-4 rounded-lg bg-dark-800/50 border border-white/5">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #8b5cf6;"></div>
+              <span>Core Libraries</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #22c55e;"></div>
+              <span>Shared Libraries</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #3b82f6;"></div>
+              <span>Components (Core)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #06b6d4;"></div>
+              <span>Interfaces (CLI/HTTP/MCP)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #f97316;"></div>
+              <span>Plugin System</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #ec4899;"></div>
+              <span>UI Libraries</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #eab308;"></div>
+              <span>API Clients</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex gap-4 mb-4">
+          <button id="resetBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            Reset View
+          </button>
+          <button id="zoomInBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            Zoom In
+          </button>
+          <button id="zoomOutBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            Zoom Out
+          </button>
+          <select id="filterSelect" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            <option value="all">Show All</option>
+            <option value="core">Core Libraries</option>
+            <option value="shared">Shared Libraries</option>
+            <option value="component">Components</option>
+            <option value="interface">Interfaces</option>
+            <option value="plugin">Plugin System</option>
+            <option value="ui">UI Libraries</option>
+            <option value="api">API Clients</option>
+          </select>
+        </div>
+
+        <!-- Graph container -->
+        <div class="gradient-border rounded-xl overflow-hidden glow">
+          <div id="graph" class="bg-dark-800" style="height: 700px;"></div>
+        </div>
+
+        <!-- Info panel -->
+        <div id="infoPanel" class="mt-4 p-4 rounded-lg bg-dark-800/50 border border-white/5 hidden">
+          <h3 id="infoName" class="text-white font-medium mb-2"></h3>
+          <p id="infoCategory" class="text-sm text-gray-500 mb-3"></p>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-500">Depends on:</span>
+              <ul id="infoDeps" class="text-accent-400 mt-1"></ul>
+            </div>
+            <div>
+              <span class="text-gray-500">Used by:</span>
+              <ul id="infoUsedBy" class="text-green-400 mt-1"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Dependency graph data
+    const nodes = [
+      // Core/Shared libraries (no dependencies)
+      { id: "lib-cli-common", category: "shared", label: "lib-cli-common" },
+      { id: "lib-migrations", category: "shared", label: "lib-migrations" },
+      { id: "lib-color", category: "ui", label: "lib-color" },
+      { id: "lib-animation", category: "ui", label: "lib-animation" },
+      { id: "lib-syntax-highlight", category: "ui", label: "lib-syntax-highlight" },
+      { id: "lib-json-tree", category: "ui", label: "lib-json-tree" },
+      { id: "lib-terminal-grid", category: "ui", label: "lib-terminal-grid" },
+
+      // API clients
+      { id: "lib-github-client", category: "api", label: "lib-github-client" },
+      { id: "lib-anthropic-client", category: "api", label: "lib-anthropic-client" },
+      { id: "lib-openai-client", category: "api", label: "lib-openai-client" },
+      { id: "lib-ollama-client", category: "api", label: "lib-ollama-client" },
+
+      // Libraries with deps
+      { id: "lib-embed", category: "shared", label: "lib-embed" },
+      { id: "lib-terminal-theme", category: "ui", label: "lib-terminal-theme" },
+      { id: "lib-iced-ui", category: "ui", label: "lib-iced-ui" },
+
+      // Plugin system
+      { id: "lib-plugin-abi", category: "plugin", label: "lib-plugin-abi" },
+      { id: "lib-plugin-manifest", category: "plugin", label: "lib-plugin-manifest" },
+      { id: "lib-plugin-verify", category: "plugin", label: "lib-plugin-verify" },
+      { id: "lib-plugin-registry", category: "plugin", label: "lib-plugin-registry" },
+      { id: "lib-plugin-host", category: "plugin", label: "lib-plugin-host" },
+
+      // Core components
+      { id: "adi-indexer-core", category: "component", label: "adi-indexer-core" },
+      { id: "adi-tasks-core", category: "component", label: "adi-tasks-core" },
+      { id: "adi-knowledgebase-core", category: "component", label: "adi-knowledgebase-core" },
+      { id: "adi-agent-loop-core", category: "component", label: "adi-agent-loop-core" },
+
+      // LLM providers
+      { id: "lib-llm-providers", category: "core", label: "lib-llm-providers" },
+
+      // Interfaces - Indexer
+      { id: "adi-indexer-cli", category: "interface", label: "adi-indexer-cli" },
+      { id: "adi-indexer-http", category: "interface", label: "adi-indexer-http" },
+      { id: "adi-indexer-mcp", category: "interface", label: "adi-indexer-mcp" },
+      { id: "adi-indexer-plugin", category: "interface", label: "adi-indexer-plugin" },
+
+      // Interfaces - Tasks
+      { id: "adi-tasks-cli", category: "interface", label: "adi-tasks-cli" },
+      { id: "adi-tasks-http", category: "interface", label: "adi-tasks-http" },
+      { id: "adi-tasks-mcp", category: "interface", label: "adi-tasks-mcp" },
+      { id: "adi-tasks-plugin", category: "interface", label: "adi-tasks-plugin" },
+
+      // Interfaces - Knowledgebase
+      { id: "adi-knowledgebase-cli", category: "interface", label: "adi-knowledgebase-cli" },
+      { id: "adi-knowledgebase-http", category: "interface", label: "adi-knowledgebase-http" },
+      { id: "adi-knowledgebase-mcp", category: "interface", label: "adi-knowledgebase-mcp" },
+      { id: "adi-knowledgebase-plugin", category: "interface", label: "adi-knowledgebase-plugin" },
+
+      // Interfaces - Agent Loop
+      { id: "adi-agent-loop-cli", category: "interface", label: "adi-agent-loop-cli" },
+      { id: "adi-agent-loop-http", category: "interface", label: "adi-agent-loop-http" },
+      { id: "adi-agent-loop-mcp", category: "interface", label: "adi-agent-loop-mcp" },
+      { id: "adi-agent-loop-plugin", category: "interface", label: "adi-agent-loop-plugin" },
+
+      // Top-level apps
+      { id: "adi-cli", category: "core", label: "adi-cli" },
+      { id: "adi-executor", category: "core", label: "adi-executor" },
+      { id: "adi-plugin-registry-http", category: "plugin", label: "adi-plugin-registry-http" },
+    ];
+
+    const links = [
+      // lib-embed -> lib-cli-common
+      { source: "lib-embed", target: "lib-cli-common" },
+
+      // lib-terminal-theme -> lib-color
+      { source: "lib-terminal-theme", target: "lib-color" },
+
+      // lib-iced-ui -> lib-terminal-theme
+      { source: "lib-iced-ui", target: "lib-terminal-theme" },
+
+      // lib-plugin-registry -> lib-plugin-manifest
+      { source: "lib-plugin-registry", target: "lib-plugin-manifest" },
+
+      // lib-plugin-host -> plugin system
+      { source: "lib-plugin-host", target: "lib-plugin-abi" },
+      { source: "lib-plugin-host", target: "lib-plugin-manifest" },
+      { source: "lib-plugin-host", target: "lib-plugin-verify" },
+      { source: "lib-plugin-host", target: "lib-plugin-registry" },
+
+      // adi-indexer-core -> libs
+      { source: "adi-indexer-core", target: "lib-embed" },
+      { source: "adi-indexer-core", target: "lib-cli-common" },
+      { source: "adi-indexer-core", target: "lib-migrations" },
+
+      // adi-tasks-core -> lib-migrations
+      { source: "adi-tasks-core", target: "lib-migrations" },
+
+      // adi-knowledgebase-core -> libs
+      { source: "adi-knowledgebase-core", target: "lib-embed" },
+      { source: "adi-knowledgebase-core", target: "lib-migrations" },
+
+      // adi-agent-loop-core -> lib-migrations
+      { source: "adi-agent-loop-core", target: "lib-migrations" },
+
+      // lib-llm-providers -> adi-agent-loop-core
+      { source: "lib-llm-providers", target: "adi-agent-loop-core" },
+
+      // Indexer interfaces -> adi-indexer-core
+      { source: "adi-indexer-cli", target: "adi-indexer-core" },
+      { source: "adi-indexer-http", target: "adi-indexer-core" },
+      { source: "adi-indexer-mcp", target: "adi-indexer-core" },
+      { source: "adi-indexer-plugin", target: "adi-indexer-core" },
+      { source: "adi-indexer-plugin", target: "lib-plugin-abi" },
+
+      // Tasks interfaces -> adi-tasks-core
+      { source: "adi-tasks-cli", target: "adi-tasks-core" },
+      { source: "adi-tasks-cli", target: "lib-cli-common" },
+      { source: "adi-tasks-http", target: "adi-tasks-core" },
+      { source: "adi-tasks-mcp", target: "adi-tasks-core" },
+      { source: "adi-tasks-plugin", target: "adi-tasks-core" },
+      { source: "adi-tasks-plugin", target: "lib-plugin-abi" },
+
+      // Knowledgebase interfaces -> adi-knowledgebase-core
+      { source: "adi-knowledgebase-cli", target: "adi-knowledgebase-core" },
+      { source: "adi-knowledgebase-cli", target: "lib-cli-common" },
+      { source: "adi-knowledgebase-http", target: "adi-knowledgebase-core" },
+      { source: "adi-knowledgebase-mcp", target: "adi-knowledgebase-core" },
+      { source: "adi-knowledgebase-plugin", target: "adi-knowledgebase-core" },
+      { source: "adi-knowledgebase-plugin", target: "lib-plugin-abi" },
+
+      // Agent Loop interfaces -> adi-agent-loop-core
+      { source: "adi-agent-loop-cli", target: "adi-agent-loop-core" },
+      { source: "adi-agent-loop-http", target: "adi-agent-loop-core" },
+      { source: "adi-agent-loop-mcp", target: "adi-agent-loop-core" },
+      { source: "adi-agent-loop-plugin", target: "adi-agent-loop-core" },
+      { source: "adi-agent-loop-plugin", target: "lib-plugin-abi" },
+
+      // adi-cli -> plugin system + github client
+      { source: "adi-cli", target: "lib-github-client" },
+      { source: "adi-cli", target: "lib-plugin-host" },
+      { source: "adi-cli", target: "lib-plugin-abi" },
+      { source: "adi-cli", target: "lib-plugin-manifest" },
+      { source: "adi-cli", target: "lib-plugin-verify" },
+      { source: "adi-cli", target: "lib-plugin-registry" },
+
+      // adi-executor -> lib-github-client
+      { source: "adi-executor", target: "lib-github-client" },
+
+      // adi-plugin-registry-http -> plugin libs
+      { source: "adi-plugin-registry-http", target: "lib-plugin-registry" },
+      { source: "adi-plugin-registry-http", target: "lib-plugin-manifest" },
+    ];
+
+    // Category colors
+    const categoryColors = {
+      core: "#8b5cf6",
+      shared: "#22c55e",
+      component: "#3b82f6",
+      interface: "#06b6d4",
+      plugin: "#f97316",
+      ui: "#ec4899",
+      api: "#eab308",
+    };
+
+    const categoryNames = {
+      core: "Core Libraries",
+      shared: "Shared Libraries",
+      component: "Components (Core)",
+      interface: "Interfaces (CLI/HTTP/MCP)",
+      plugin: "Plugin System",
+      ui: "UI Libraries",
+      api: "API Clients",
+    };
+
+    // Setup SVG
+    const container = document.getElementById("graph");
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const svg = d3.select("#graph")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Add zoom behavior
+    const g = svg.append("g");
+    const zoom = d3.zoom()
+      .scaleExtent([0.3, 3])
+      .on("zoom", (event) => g.attr("transform", event.transform));
+    svg.call(zoom);
+
+    // Arrow marker
+    svg.append("defs").append("marker")
+      .attr("id", "arrowhead")
+      .attr("viewBox", "-0 -5 10 10")
+      .attr("refX", 20)
+      .attr("refY", 0)
+      .attr("orient", "auto")
+      .attr("markerWidth", 6)
+      .attr("markerHeight", 6)
+      .append("path")
+      .attr("d", "M 0,-5 L 10,0 L 0,5")
+      .attr("class", "arrowhead");
+
+    // Create force simulation
+    const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+      .force("charge", d3.forceManyBody().strength(-400))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(40));
+
+    // Create links
+    const link = g.append("g")
+      .selectAll("line")
+      .data(links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .attr("marker-end", "url(#arrowhead)");
+
+    // Create nodes
+    const node = g.append("g")
+      .selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+    node.append("circle")
+      .attr("r", d => d.category === "core" ? 14 : 10)
+      .attr("fill", d => categoryColors[d.category])
+      .attr("stroke", d => d3.color(categoryColors[d.category]).darker(0.5));
+
+    node.append("text")
+      .attr("dx", 14)
+      .attr("dy", 4)
+      .text(d => d.label);
+
+    // Simulation tick
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+    // Drag functions
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Click to highlight
+    let selectedNode = null;
+
+    node.on("click", (event, d) => {
+      event.stopPropagation();
+
+      if (selectedNode === d.id) {
+        // Deselect
+        selectedNode = null;
+        resetHighlight();
+        document.getElementById("infoPanel").classList.add("hidden");
+        return;
+      }
+
+      selectedNode = d.id;
+
+      // Find connected nodes
+      const deps = links.filter(l => l.source.id === d.id).map(l => l.target.id);
+      const usedBy = links.filter(l => l.target.id === d.id).map(l => l.source.id);
+      const connected = new Set([d.id, ...deps, ...usedBy]);
+
+      // Highlight
+      node.classed("highlighted", n => n.id === d.id)
+          .classed("dimmed", n => !connected.has(n.id));
+
+      link.classed("highlighted", l => l.source.id === d.id || l.target.id === d.id)
+          .classed("dimmed", l => l.source.id !== d.id && l.target.id !== d.id);
+
+      // Update info panel
+      document.getElementById("infoPanel").classList.remove("hidden");
+      document.getElementById("infoName").textContent = d.label;
+      document.getElementById("infoCategory").textContent = categoryNames[d.category];
+      document.getElementById("infoDeps").innerHTML = deps.length > 0
+        ? deps.map(dep => `<li>${dep}</li>`).join("")
+        : "<li class='text-gray-500'>None</li>";
+      document.getElementById("infoUsedBy").innerHTML = usedBy.length > 0
+        ? usedBy.map(u => `<li>${u}</li>`).join("")
+        : "<li class='text-gray-500'>None</li>";
+    });
+
+    svg.on("click", () => {
+      selectedNode = null;
+      resetHighlight();
+      document.getElementById("infoPanel").classList.add("hidden");
+    });
+
+    function resetHighlight() {
+      node.classed("highlighted", false).classed("dimmed", false);
+      link.classed("highlighted", false).classed("dimmed", false);
+    }
+
+    // Controls
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+      selectedNode = null;
+      resetHighlight();
+      document.getElementById("infoPanel").classList.add("hidden");
+    });
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+    });
+
+    document.getElementById("filterSelect").addEventListener("change", (e) => {
+      const filter = e.target.value;
+      if (filter === "all") {
+        node.style("display", "block");
+        link.style("display", "block");
+      } else {
+        const visibleNodes = new Set(nodes.filter(n => n.category === filter).map(n => n.id));
+        node.style("display", n => visibleNodes.has(n.id) ? "block" : "none");
+        link.style("display", l => visibleNodes.has(l.source.id) && visibleNodes.has(l.target.id) ? "block" : "none");
+      }
+    });
+  </script>
+</body>
+</html>
