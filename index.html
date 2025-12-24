@@ -12,15 +12,19 @@
         extend: {
           colors: {
             dark: {
-              900: '#0a0a0f',
-              800: '#12121a',
-              700: '#1a1a24',
-              600: '#22222e',
+              900: '#0d0a14',
+              800: '#13101c',
+              700: '#1a1525',
+              600: '#231d30',
             },
             accent: {
+              600: '#7c3aed',
               500: '#8b5cf6',
               400: '#a78bfa',
               300: '#c4b5fd',
+            },
+            violet: {
+              glow: '#9333ea',
             }
           },
           fontFamily: {
@@ -39,13 +43,13 @@
     body { font-family: 'Inter', system-ui, sans-serif; }
     code, pre { font-family: 'JetBrains Mono', monospace; }
 
-    .glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.15); }
-    .glow-text { text-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+    .glow { box-shadow: 0 0 50px rgba(147, 51, 234, 0.25); }
+    .glow-text { text-shadow: 0 0 40px rgba(147, 51, 234, 0.6); }
 
     .glass {
-      background: rgba(26, 26, 36, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(19, 16, 28, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
     .gradient-border {
@@ -57,7 +61,7 @@
       inset: 0;
       border-radius: inherit;
       padding: 1px;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      background: linear-gradient(135deg, rgba(147, 51, 234, 0.6), rgba(139, 92, 246, 0.2));
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -68,14 +72,14 @@
       transition: all 0.2s ease;
     }
     .sidebar-link:hover {
-      background: rgba(139, 92, 246, 0.1);
-      color: #a78bfa;
+      background: rgba(147, 51, 234, 0.15);
+      color: #c4b5fd;
       padding-left: 1.25rem;
     }
     .sidebar-link.active {
-      background: rgba(139, 92, 246, 0.15);
-      color: #a78bfa;
-      border-left: 2px solid #8b5cf6;
+      background: rgba(147, 51, 234, 0.2);
+      color: #c4b5fd;
+      border-left: 2px solid #9333ea;
     }
 
     .prose h2 { scroll-margin-top: 5rem; }
@@ -89,9 +93,10 @@
 <body class="bg-dark-900 text-gray-300 antialiased">
   <!-- Gradient orbs -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
-    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
-    <div class="absolute bottom-20 right-1/4 w-60 h-60 bg-accent-500/10 rounded-full blur-[80px]"></div>
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-600/25 rounded-full blur-[120px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-violet-500/15 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-20 right-1/4 w-72 h-72 bg-purple-500/15 rounded-full blur-[90px]"></div>
+    <div class="absolute top-1/4 left-1/3 w-64 h-64 bg-fuchsia-600/10 rounded-full blur-[80px]"></div>
   </div>
 
   <div class="relative min-h-screen flex">
@@ -161,13 +166,13 @@
         <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
           <div class="flex items-center gap-4">
             <div class="relative">
-              <input type="text" placeholder="Search docs..." class="w-64 px-4 py-2 pl-10 rounded-lg bg-dark-700 border border-white/10 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/50 transition-all">
+              <input type="text" placeholder="Search docs..." class="w-64 px-4 py-2 pl-10 rounded-lg bg-dark-700 border border-white/10 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all">
               <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               <kbd class="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-xs text-gray-500 bg-dark-600 rounded border border-white/10">⌘K</kbd>
             </div>
           </div>
           <div class="flex items-center gap-3">
-            <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">v0.8.4</span>
+            <span class="px-2 py-1 text-xs font-medium text-purple-300 bg-purple-500/15 rounded-full border border-purple-500/20">v0.8.4</span>
           </div>
         </div>
       </header>
@@ -176,26 +181,31 @@
       <div class="max-w-4xl mx-auto px-8 py-12">
         <!-- Hero -->
         <section id="introduction" class="mb-20">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-500/10 text-accent-400 text-sm font-medium mb-6">
-            <span class="w-2 h-2 rounded-full bg-accent-500 animate-pulse"></span>
-            When you think agents, think ADI
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 text-purple-300 text-sm font-medium mb-6 border border-purple-500/20">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-400"></span>
+            </span>
+            Stable Release v1.0
           </div>
-          <h1 class="text-5xl font-bold text-white mb-6 glow-text">
-            The <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-300">Agent Development</span> Infrastructure
+          <h1 class="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight mb-6 glow-text">
+            When you think agents, <br class="hidden md:block"/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-fuchsia-400">think ADI.</span>
           </h1>
-          <p class="text-xl text-gray-400 leading-relaxed max-w-2xl mb-4">
-            ADI is a complete toolkit for building, deploying, and orchestrating autonomous AI agents. From code understanding to task execution, ADI provides the infrastructure your agents need to thrive.
+          <p class="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl mb-4">
+            The complete Agent Development Infrastructure. Build, deploy, and orchestrate autonomous AI agents with a single toolkit.
           </p>
           <p class="text-lg text-gray-500 leading-relaxed max-w-2xl">
             Modular. Extensible. Production-ready.
           </p>
 
-          <div class="flex gap-4 mt-8">
-            <a href="#installation" class="px-6 py-3 rounded-lg bg-gradient-to-r from-accent-500 to-accent-400 text-white font-medium hover:opacity-90 transition-opacity">
-              Get Started
+          <div class="flex flex-wrap gap-4 mt-8">
+            <a href="#installation" class="flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-violet-500 text-white font-bold hover:from-purple-500 hover:to-violet-400 transition-all shadow-lg shadow-purple-500/25 transform hover:scale-105">
+              <span>Get Started</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
             </a>
-            <a href="#agents" class="px-6 py-3 rounded-lg border border-white/10 text-gray-300 font-medium hover:bg-white/5 transition-colors">
-              Explore Agents
+            <a href="https://github.com/adi-family" target="_blank" class="flex items-center gap-2 px-6 py-3 rounded-lg border border-purple-500/30 text-gray-300 font-medium hover:bg-purple-500/10 hover:border-purple-400/50 transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>Star on GitHub</span>
             </a>
           </div>
 
@@ -228,23 +238,23 @@
           </p>
 
           <div class="grid grid-cols-2 gap-6">
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="text-accent-400 text-2xl mb-3">01</div>
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10 hover:border-purple-500/25 transition-colors">
+              <div class="text-purple-400 text-2xl mb-3 font-bold">01</div>
               <h3 class="text-white font-medium mb-2">Deep Code Understanding</h3>
               <p class="text-gray-500 text-sm">Semantic code indexing with embeddings. Your agents don't just see code - they understand it. Search by meaning, not just keywords.</p>
             </div>
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="text-accent-400 text-2xl mb-3">02</div>
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10 hover:border-purple-500/25 transition-colors">
+              <div class="text-purple-400 text-2xl mb-3 font-bold">02</div>
               <h3 class="text-white font-medium mb-2">Persistent Knowledge</h3>
               <p class="text-gray-500 text-sm">Graph-based knowledgebase that grows with your project. Agents remember context across sessions and share insights.</p>
             </div>
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="text-accent-400 text-2xl mb-3">03</div>
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10 hover:border-purple-500/25 transition-colors">
+              <div class="text-purple-400 text-2xl mb-3 font-bold">03</div>
               <h3 class="text-white font-medium mb-2">Isolated Execution</h3>
               <p class="text-gray-500 text-sm">Docker-based task executor. Run agent workloads in isolated containers with full control over environment and resources.</p>
             </div>
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="text-accent-400 text-2xl mb-3">04</div>
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10 hover:border-purple-500/25 transition-colors">
+              <div class="text-purple-400 text-2xl mb-3 font-bold">04</div>
               <h3 class="text-white font-medium mb-2">Universal Interfaces</h3>
               <p class="text-gray-500 text-sm">Every component exposes CLI, HTTP, and MCP interfaces. Integrate with any tool, any workflow, any LLM.</p>
             </div>
@@ -267,15 +277,15 @@
                 <span class="ml-2">Terminal</span>
               </div>
               <pre class="text-sm"><code class="text-gray-300"><span class="text-gray-500"># Install the ADI CLI</span>
-<span class="text-accent-400">cargo</span> install adi-cli
+<span class="text-purple-300">cargo</span> install adi-cli
 
 <span class="text-gray-500"># Verify installation</span>
-<span class="text-accent-400">adi</span> --version
+<span class="text-purple-300">adi</span> --version
 <span class="text-green-400">adi 0.8.4</span>
 
 <span class="text-gray-500"># Or build from source</span>
-<span class="text-accent-400">git</span> clone --recursive https://github.com/adi-family/cli
-<span class="text-accent-400">cd</span> cli && cargo build --release</code></pre>
+<span class="text-purple-300">git</span> clone --recursive https://github.com/adi-family/cli
+<span class="text-purple-300">cd</span> cli && cargo build --release</code></pre>
             </div>
           </div>
 
@@ -297,39 +307,39 @@
           <p class="text-gray-400 mb-6">Get your first agent running in under 5 minutes.</p>
 
           <div class="space-y-4">
-            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center font-semibold">1</div>
+            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-purple-500/10">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center font-semibold">1</div>
               <div class="flex-1">
                 <h3 class="text-white font-medium mb-2">Initialize your project</h3>
                 <p class="text-gray-500 text-sm mb-3">Create an ADI workspace in your project directory. This sets up the configuration and prepares your codebase for indexing.</p>
-                <code class="px-3 py-1.5 rounded bg-dark-700 text-accent-400 text-sm">adi init</code>
+                <code class="px-3 py-1.5 rounded bg-dark-700 text-purple-300 text-sm">adi init</code>
               </div>
             </div>
 
-            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center font-semibold">2</div>
+            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-purple-500/10">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center font-semibold">2</div>
               <div class="flex-1">
                 <h3 class="text-white font-medium mb-2">Index your codebase</h3>
                 <p class="text-gray-500 text-sm mb-3">Build a semantic index of your code. ADI parses your files, generates embeddings, and creates a searchable knowledge graph.</p>
-                <code class="px-3 py-1.5 rounded bg-dark-700 text-accent-400 text-sm">adi index</code>
+                <code class="px-3 py-1.5 rounded bg-dark-700 text-purple-300 text-sm">adi index</code>
               </div>
             </div>
 
-            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center font-semibold">3</div>
+            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-purple-500/10">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center font-semibold">3</div>
               <div class="flex-1">
                 <h3 class="text-white font-medium mb-2">Start the agent loop</h3>
                 <p class="text-gray-500 text-sm mb-3">Launch an autonomous agent with access to your indexed codebase. The agent can read, understand, and modify your code.</p>
-                <code class="px-3 py-1.5 rounded bg-dark-700 text-accent-400 text-sm">adi agent start</code>
+                <code class="px-3 py-1.5 rounded bg-dark-700 text-purple-300 text-sm">adi agent start</code>
               </div>
             </div>
 
-            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-white/5">
-              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center font-semibold">4</div>
+            <div class="flex gap-4 p-5 rounded-xl bg-dark-800/50 border border-purple-500/10">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center font-semibold">4</div>
               <div class="flex-1">
                 <h3 class="text-white font-medium mb-2">Connect via MCP</h3>
                 <p class="text-gray-500 text-sm mb-3">Expose ADI capabilities to any MCP-compatible client. Claude, Cursor, and other tools can now use your agent infrastructure.</p>
-                <code class="px-3 py-1.5 rounded bg-dark-700 text-accent-400 text-sm">adi mcp serve</code>
+                <code class="px-3 py-1.5 rounded bg-dark-700 text-purple-300 text-sm">adi mcp serve</code>
               </div>
             </div>
           </div>
@@ -339,7 +349,7 @@
         <section id="agents" class="mb-20">
           <div class="flex items-center gap-3 mb-6">
             <h2 class="text-2xl font-bold text-white">Agent Loop</h2>
-            <span class="px-2 py-0.5 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Core</span>
+            <span class="px-2 py-0.5 text-xs font-medium text-purple-300 bg-purple-500/15 rounded-full border border-purple-500/20">Core</span>
           </div>
           <p class="text-gray-400 mb-8 max-w-2xl">
             The Agent Loop is ADI's autonomous execution engine. It orchestrates LLM reasoning, tool execution, and state management in a continuous feedback loop.
@@ -352,22 +362,22 @@
               </div>
               <div class="flex items-center justify-between gap-4">
                 <div class="flex-1 p-4 rounded-lg bg-dark-700/50 text-center">
-                  <div class="text-accent-400 font-medium mb-1">Observe</div>
+                  <div class="text-purple-300 font-medium mb-1">Observe</div>
                   <div class="text-xs text-gray-500">Gather context from tools & memory</div>
                 </div>
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-purple-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 <div class="flex-1 p-4 rounded-lg bg-dark-700/50 text-center">
-                  <div class="text-accent-400 font-medium mb-1">Think</div>
+                  <div class="text-purple-300 font-medium mb-1">Think</div>
                   <div class="text-xs text-gray-500">LLM reasoning & planning</div>
                 </div>
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-purple-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 <div class="flex-1 p-4 rounded-lg bg-dark-700/50 text-center">
-                  <div class="text-accent-400 font-medium mb-1">Act</div>
+                  <div class="text-purple-300 font-medium mb-1">Act</div>
                   <div class="text-xs text-gray-500">Execute tools & update state</div>
                 </div>
-                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg class="w-6 h-6 text-purple-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 <div class="flex-1 p-4 rounded-lg bg-dark-700/50 text-center">
-                  <div class="text-accent-400 font-medium mb-1">Learn</div>
+                  <div class="text-purple-300 font-medium mb-1">Learn</div>
                   <div class="text-xs text-gray-500">Update knowledge & adapt</div>
                 </div>
               </div>
@@ -392,9 +402,9 @@
           <p class="text-gray-400 mb-8">ADI follows a layered architecture. Each layer builds on the previous, creating a powerful and flexible system.</p>
 
           <div class="space-y-4">
-            <div class="p-6 rounded-xl bg-gradient-to-r from-accent-500/10 to-transparent border border-accent-500/20">
+            <div class="p-6 rounded-xl bg-gradient-to-r from-purple-500/15 to-transparent border border-purple-500/25">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div class="flex-1">
@@ -404,9 +414,9 @@
               </div>
             </div>
 
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
                 </div>
                 <div class="flex-1">
@@ -416,9 +426,9 @@
               </div>
             </div>
 
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                 </div>
                 <div class="flex-1">
@@ -428,9 +438,9 @@
               </div>
             </div>
 
-            <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
+            <div class="p-6 rounded-xl bg-dark-800/50 border border-purple-500/10">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg bg-accent-500/20 text-accent-400 flex items-center justify-center">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
                 </div>
                 <div class="flex-1">
@@ -450,7 +460,7 @@
           <div class="gradient-border rounded-xl overflow-hidden mb-6">
             <div class="bg-dark-800 p-6">
               <pre class="text-sm"><code class="text-gray-300"><span class="text-gray-500"># List available plugins from registry</span>
-<span class="text-accent-400">adi</span> plugin list
+<span class="text-purple-300">adi</span> plugin list
 <span class="text-gray-500">
 NAME              VERSION   DESCRIPTION
 code-indexer      0.3.0     Semantic code indexing with embeddings
@@ -459,10 +469,10 @@ git-tools         0.1.5     Git operations and history analysis
 llm-providers     0.4.0     Multi-provider LLM support</span>
 
 <span class="text-gray-500"># Install a plugin</span>
-<span class="text-accent-400">adi</span> plugin install code-indexer
+<span class="text-purple-300">adi</span> plugin install code-indexer
 
 <span class="text-gray-500"># View installed plugins</span>
-<span class="text-accent-400">adi</span> plugin installed</code></pre>
+<span class="text-purple-300">adi</span> plugin installed</code></pre>
             </div>
           </div>
 
@@ -470,19 +480,19 @@ llm-providers     0.4.0     Multi-provider LLM support</span>
             <h3 class="text-white font-medium mb-4">Plugin Capabilities</h3>
             <ul class="space-y-3 text-sm text-gray-400">
               <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span><strong class="text-white">Service Registry</strong> - Plugins can provide and consume services from other plugins</span>
               </li>
               <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span><strong class="text-white">Hot Reloading</strong> - Update plugins without restarting the host process</span>
               </li>
               <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span><strong class="text-white">Dependency Management</strong> - Automatic topological loading based on plugin dependencies</span>
               </li>
               <li class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-accent-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span><strong class="text-white">Signature Verification</strong> - Ed25519 signatures ensure plugin authenticity</span>
               </li>
             </ul>
@@ -497,7 +507,7 @@ llm-providers     0.4.0     Multi-provider LLM support</span>
           <div class="gradient-border rounded-xl overflow-hidden">
             <div class="bg-dark-800 p-6">
               <pre class="text-sm"><code class="text-gray-300"><span class="text-gray-500"># List registered services</span>
-<span class="text-accent-400">adi</span> services
+<span class="text-purple-300">adi</span> services
 <span class="text-gray-500">
 SERVICE                 VERSION   PROVIDER
 indexer.search          1.0.0     code-indexer
@@ -508,7 +518,7 @@ llm.complete            2.0.0     llm-providers
 llm.embed               2.0.0     llm-providers</span>
 
 <span class="text-gray-500"># Call a service directly</span>
-<span class="text-accent-400">adi</span> service call indexer.search --query "authentication handler"</code></pre>
+<span class="text-purple-300">adi</span> service call indexer.search --query "authentication handler"</code></pre>
             </div>
           </div>
         </section>
@@ -544,7 +554,7 @@ llm.embed               2.0.0     llm-providers</span>
           <div class="gradient-border rounded-xl overflow-hidden">
             <div class="bg-dark-800 p-6">
               <pre class="text-sm"><code class="text-gray-300"><span class="text-gray-500"># Submit a job to the executor</span>
-<span class="text-accent-400">adi</span> executor submit \
+<span class="text-purple-300">adi</span> executor submit \
   --image ghcr.io/adi-family/worker:latest \
   --input '{"task": "analyze", "path": "/repo"}' \
   --output webhook:https://api.example.com/callback
@@ -552,7 +562,7 @@ llm.embed               2.0.0     llm-providers</span>
 <span class="text-green-400">Job submitted: job_abc123</span>
 
 <span class="text-gray-500"># Check job status</span>
-<span class="text-accent-400">adi</span> executor status job_abc123
+<span class="text-purple-300">adi</span> executor status job_abc123
 <span class="text-gray-500">Status: running
 Started: 2 minutes ago
 Container: executor-job_abc123</span></code></pre>
@@ -593,15 +603,15 @@ Container: executor-job_abc123</span></code></pre>
           <div class="p-6 rounded-xl bg-dark-800/50 border border-white/5">
             <div class="grid grid-cols-3 gap-6 text-center">
               <div>
-                <div class="text-3xl font-bold text-accent-400 mb-1">Graph</div>
+                <div class="text-3xl font-bold text-purple-300 mb-1">Graph</div>
                 <div class="text-sm text-gray-500">Entity-relationship model</div>
               </div>
               <div>
-                <div class="text-3xl font-bold text-accent-400 mb-1">Vector</div>
+                <div class="text-3xl font-bold text-purple-300 mb-1">Vector</div>
                 <div class="text-sm text-gray-500">Embedding-based retrieval</div>
               </div>
               <div>
-                <div class="text-3xl font-bold text-accent-400 mb-1">Hybrid</div>
+                <div class="text-3xl font-bold text-purple-300 mb-1">Hybrid</div>
                 <div class="text-sm text-gray-500">Best of both worlds</div>
               </div>
             </div>
@@ -616,12 +626,12 @@ Container: executor-job_abc123</span></code></pre>
           <div class="gradient-border rounded-xl overflow-hidden">
             <div class="bg-dark-800 p-6">
               <pre class="text-sm"><code class="text-gray-300"><span class="text-gray-500"># Create a task</span>
-<span class="text-accent-400">adi</span> task create "Implement user authentication" \
+<span class="text-purple-300">adi</span> task create "Implement user authentication" \
   --priority high \
   --tags backend,security
 
 <span class="text-gray-500"># List tasks</span>
-<span class="text-accent-400">adi</span> task list --status pending
+<span class="text-purple-300">adi</span> task list --status pending
 <span class="text-gray-500">
 ID       PRIORITY   STATUS    TITLE
 task_01  high       pending   Implement user authentication
@@ -629,7 +639,7 @@ task_02  medium     pending   Add rate limiting
 task_03  low        pending   Update documentation</span>
 
 <span class="text-gray-500"># Assign to agent</span>
-<span class="text-accent-400">adi</span> agent assign task_01</code></pre>
+<span class="text-purple-300">adi</span> agent assign task_01</code></pre>
             </div>
           </div>
         </section>
@@ -640,7 +650,7 @@ task_03  low        pending   Update documentation</span>
           <p class="text-gray-400 mb-6">Shared infrastructure libraries powering the ADI ecosystem.</p>
 
           <div class="space-y-4">
-            <a href="libs/lib-github-client.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-github-client.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-github-client</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
@@ -654,7 +664,7 @@ task_03  low        pending   Update documentation</span>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
               </div>
               <p class="text-gray-500 text-sm mb-3">Shared embedding library for ADI tools. Provides unified interface for generating text embeddings across providers.</p>
-              <code class="text-xs text-accent-400">cargo add lib-embed</code>
+              <code class="text-xs text-purple-300">cargo add lib-embed</code>
             </div>
 
             <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
@@ -663,7 +673,7 @@ task_03  low        pending   Update documentation</span>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
               </div>
               <p class="text-gray-500 text-sm mb-3">Database migration framework for ADI components. SQLite-focused with versioned migrations.</p>
-              <code class="text-xs text-accent-400">cargo add lib-migrations</code>
+              <code class="text-xs text-purple-300">cargo add lib-migrations</code>
             </div>
 
             <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
@@ -672,7 +682,7 @@ task_03  low        pending   Update documentation</span>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
               </div>
               <p class="text-gray-500 text-sm mb-3">Common CLI utilities for ADI tools. Argument parsing, output formatting, and shared CLI patterns.</p>
-              <code class="text-xs text-accent-400">cargo add lib-cli-common</code>
+              <code class="text-xs text-purple-300">cargo add lib-cli-common</code>
             </div>
 
           </div>
@@ -716,15 +726,15 @@ task_03  low        pending   Update documentation</span>
           <p class="text-gray-400 mb-6">A complete plugin system with stable ABI, registry, and verification.</p>
 
           <div class="space-y-4">
-            <a href="libs/lib-plugin-host.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-host.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-host</h3>
-                <span class="px-2 py-0.5 text-xs text-accent-400 bg-accent-500/10 rounded">Main Entry</span>
+                <span class="px-2 py-0.5 text-xs text-purple-300 bg-purple-500/15 rounded border border-purple-500/20">Main Entry</span>
               </div>
               <p class="text-gray-500 text-sm">Plugin host for loading and managing plugins. Scans, downloads, loads, and manages plugin lifecycle.</p>
             </a>
 
-            <a href="libs/lib-plugin-abi.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-abi.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-abi</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">ABI</span>
@@ -732,7 +742,7 @@ task_03  low        pending   Update documentation</span>
               <p class="text-gray-500 text-sm">Stable ABI definitions using abi_stable for binary compatibility across Rust versions.</p>
             </a>
 
-            <a href="libs/lib-plugin-manifest.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-manifest.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-manifest</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Parser</span>
@@ -740,7 +750,7 @@ task_03  low        pending   Update documentation</span>
               <p class="text-gray-500 text-sm">Plugin manifest parsing for plugin.toml and package.toml files.</p>
             </a>
 
-            <a href="libs/lib-plugin-registry.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-registry.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-registry</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Client</span>
@@ -748,7 +758,7 @@ task_03  low        pending   Update documentation</span>
               <p class="text-gray-500 text-sm">Plugin registry HTTP client with caching, search, and progress-tracked downloads.</p>
             </a>
 
-            <a href="libs/lib-plugin-verify.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-verify.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">lib-plugin-verify</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Security</span>
@@ -756,7 +766,7 @@ task_03  low        pending   Update documentation</span>
               <p class="text-gray-500 text-sm">Plugin signature and checksum verification with Ed25519 signatures.</p>
             </a>
 
-            <a href="libs/adi-plugin-registry-http.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-plugin-registry-http.html" class="block p-5 rounded-xl bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="flex items-center justify-between mb-2">
                 <h3 class="text-white font-medium">adi-plugin-registry-http</h3>
                 <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Server</span>
@@ -817,7 +827,7 @@ task_03  low        pending   Update documentation</span>
         <!-- CLI -->
         <section id="cli" class="mb-20">
           <h2 class="text-2xl font-bold text-white mb-6">CLI Commands</h2>
-          <p class="text-gray-400 mb-6">The ADI CLI provides access to all functionality. Every command supports <code class="text-accent-400">--help</code> for detailed usage.</p>
+          <p class="text-gray-400 mb-6">The ADI CLI provides access to all functionality. Every command supports <code class="text-purple-300">--help</code> for detailed usage.</p>
 
           <div class="overflow-x-auto rounded-xl border border-white/5">
             <table class="w-full text-sm">
@@ -829,43 +839,43 @@ task_03  low        pending   Update documentation</span>
               </thead>
               <tbody class="divide-y divide-white/5">
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi init</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi init</code></td>
                   <td class="px-4 py-3 text-gray-400">Initialize ADI in current directory</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi index</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi index</code></td>
                   <td class="px-4 py-3 text-gray-400">Index codebase for semantic search</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi search &lt;query&gt;</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi search &lt;query&gt;</code></td>
                   <td class="px-4 py-3 text-gray-400">Semantic search across indexed code</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi agent start</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi agent start</code></td>
                   <td class="px-4 py-3 text-gray-400">Start the agent loop</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi plugin &lt;cmd&gt;</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi plugin &lt;cmd&gt;</code></td>
                   <td class="px-4 py-3 text-gray-400">Manage plugins (install, remove, list)</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi services</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi services</code></td>
                   <td class="px-4 py-3 text-gray-400">List registered services</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi task &lt;cmd&gt;</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi task &lt;cmd&gt;</code></td>
                   <td class="px-4 py-3 text-gray-400">Task management (create, list, update)</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi executor &lt;cmd&gt;</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi executor &lt;cmd&gt;</code></td>
                   <td class="px-4 py-3 text-gray-400">Docker job execution</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi mcp serve</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi mcp serve</code></td>
                   <td class="px-4 py-3 text-gray-400">Start MCP server</td>
                 </tr>
                 <tr class="hover:bg-dark-800/30 transition-colors">
-                  <td class="px-4 py-3"><code class="text-accent-400">adi update</code></td>
+                  <td class="px-4 py-3"><code class="text-purple-300">adi update</code></td>
                   <td class="px-4 py-3 text-gray-400">Self-update to latest version</td>
                 </tr>
               </tbody>
@@ -903,12 +913,12 @@ task_03  low        pending   Update documentation</span>
                 <span>claude_desktop_config.json</span>
               </div>
               <pre class="text-sm"><code class="text-gray-300">{
-  <span class="text-accent-400">"mcpServers"</span>: {
-    <span class="text-accent-400">"adi-indexer"</span>: {
+  <span class="text-purple-300">"mcpServers"</span>: {
+    <span class="text-purple-300">"adi-indexer"</span>: {
       <span class="text-green-400">"command"</span>: <span class="text-green-400">"adi"</span>,
       <span class="text-green-400">"args"</span>: [<span class="text-green-400">"mcp"</span>, <span class="text-green-400">"indexer"</span>]
     },
-    <span class="text-accent-400">"adi-tasks"</span>: {
+    <span class="text-purple-300">"adi-tasks"</span>: {
       <span class="text-green-400">"command"</span>: <span class="text-green-400">"adi"</span>,
       <span class="text-green-400">"args"</span>: [<span class="text-green-400">"mcp"</span>, <span class="text-green-400">"tasks"</span>]
     }
@@ -921,33 +931,33 @@ task_03  low        pending   Update documentation</span>
         <!-- Config -->
         <section id="config" class="mb-20">
           <h2 class="text-2xl font-bold text-white mb-6">Configuration</h2>
-          <p class="text-gray-400 mb-6">ADI is configured via <code class="px-1.5 py-0.5 rounded bg-dark-700 text-accent-400">adi.toml</code> in your project root.</p>
+          <p class="text-gray-400 mb-6">ADI is configured via <code class="px-1.5 py-0.5 rounded bg-dark-700 text-purple-300">adi.toml</code> in your project root.</p>
 
           <div class="gradient-border rounded-xl overflow-hidden">
             <div class="bg-dark-800 p-6">
               <div class="flex items-center gap-2 text-gray-500 text-sm mb-4">
                 <span>adi.toml</span>
               </div>
-              <pre class="text-sm"><code class="text-gray-300"><span class="text-accent-400">[project]</span>
+              <pre class="text-sm"><code class="text-gray-300"><span class="text-purple-300">[project]</span>
 name = <span class="text-green-400">"my-awesome-project"</span>
 version = <span class="text-green-400">"0.1.0"</span>
 
-<span class="text-accent-400">[indexer]</span>
+<span class="text-purple-300">[indexer]</span>
 include = [<span class="text-green-400">"src/**/*.rs"</span>, <span class="text-green-400">"lib/**/*.rs"</span>]
 exclude = [<span class="text-green-400">"target/**"</span>, <span class="text-green-400">"tests/**"</span>]
 embedding_model = <span class="text-green-400">"text-embedding-3-small"</span>
 
-<span class="text-accent-400">[agent]</span>
+<span class="text-purple-300">[agent]</span>
 provider = <span class="text-green-400">"anthropic"</span>
 model = <span class="text-green-400">"claude-sonnet-4-20250514"</span>
 max_iterations = <span class="text-cyan-400">50</span>
 
-<span class="text-accent-400">[executor]</span>
+<span class="text-purple-300">[executor]</span>
 docker_host = <span class="text-green-400">"unix:///var/run/docker.sock"</span>
 default_timeout = <span class="text-green-400">"5m"</span>
 max_concurrent_jobs = <span class="text-cyan-400">4</span>
 
-<span class="text-accent-400">[plugins]</span>
+<span class="text-purple-300">[plugins]</span>
 registry = <span class="text-green-400">"https://plugins.adi.dev"</span>
 auto_update = <span class="text-cyan-400">true</span></code></pre>
             </div>
@@ -960,79 +970,79 @@ auto_update = <span class="text-cyan-400">true</span></code></pre>
           <p class="text-gray-400 mb-6">Detailed documentation pages for each library and component.</p>
 
           <div class="grid grid-cols-3 gap-3">
-            <a href="libs/adi-agent-loop-core.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-agent-loop-core.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-agent-loop-core</div>
               <div class="text-gray-500 text-xs">Agent Loop</div>
             </a>
-            <a href="libs/adi-agent-loop-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-agent-loop-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-agent-loop-cli</div>
               <div class="text-gray-500 text-xs">Agent Loop</div>
             </a>
-            <a href="libs/adi-agent-loop-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-agent-loop-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-agent-loop-http</div>
               <div class="text-gray-500 text-xs">Agent Loop</div>
             </a>
-            <a href="libs/adi-agent-loop-mcp.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-agent-loop-mcp.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-agent-loop-mcp</div>
               <div class="text-gray-500 text-xs">Agent Loop</div>
             </a>
-            <a href="libs/adi-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-cli</div>
               <div class="text-gray-500 text-xs">CLI</div>
             </a>
-            <a href="libs/adi-executor.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-executor.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-executor</div>
               <div class="text-gray-500 text-xs">Executor</div>
             </a>
-            <a href="libs/adi-knowledgebase-core.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-knowledgebase-core.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-knowledgebase-core</div>
               <div class="text-gray-500 text-xs">Knowledgebase</div>
             </a>
-            <a href="libs/adi-knowledgebase-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-knowledgebase-cli.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-knowledgebase-cli</div>
               <div class="text-gray-500 text-xs">Knowledgebase</div>
             </a>
-            <a href="libs/adi-knowledgebase-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-knowledgebase-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-knowledgebase-http</div>
               <div class="text-gray-500 text-xs">Knowledgebase</div>
             </a>
-            <a href="libs/adi-knowledgebase-mcp.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-knowledgebase-mcp.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-knowledgebase-mcp</div>
               <div class="text-gray-500 text-xs">Knowledgebase</div>
             </a>
-            <a href="libs/adi-plugin-registry-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/adi-plugin-registry-http.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">adi-plugin-registry-http</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/lib-github-client.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-github-client.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-github-client</div>
               <div class="text-gray-500 text-xs">Library</div>
             </a>
-            <a href="libs/lib-plugin-abi.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-abi.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-plugin-abi</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/lib-plugin-host.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-host.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-plugin-host</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/lib-plugin-manifest.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-manifest.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-plugin-manifest</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/lib-plugin-registry.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-registry.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-plugin-registry</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/lib-plugin-verify.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/lib-plugin-verify.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">lib-plugin-verify</div>
               <div class="text-gray-500 text-xs">Plugin System</div>
             </a>
-            <a href="libs/debug-metal-shader.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/debug-metal-shader.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">debug-metal-shader</div>
               <div class="text-gray-500 text-xs">UI</div>
             </a>
-            <a href="libs/tarminal-signaling-server.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-accent-500/30 transition-colors">
+            <a href="libs/tarminal-signaling-server.html" class="p-3 rounded-lg bg-dark-800/50 border border-white/5 hover:border-purple-500/40 transition-colors">
               <div class="text-white text-sm font-medium">tarminal-signaling-server</div>
               <div class="text-gray-500 text-xs">Library</div>
             </a>
@@ -1041,16 +1051,19 @@ auto_update = <span class="text-cyan-400">true</span></code></pre>
 
         <!-- CTA -->
         <section class="mb-20">
-          <div class="p-8 rounded-2xl bg-gradient-to-br from-accent-500/20 to-accent-500/5 border border-accent-500/20 text-center">
-            <h2 class="text-2xl font-bold text-white mb-3">Ready to build with agents?</h2>
-            <p class="text-gray-400 mb-6">Join the community building the future of autonomous development.</p>
-            <div class="flex justify-center gap-4">
-              <a href="#installation" class="px-6 py-3 rounded-lg bg-accent-500 text-white font-medium hover:bg-accent-400 transition-colors">
-                Get Started
-              </a>
-              <a href="https://github.com/adi-family" target="_blank" class="px-6 py-3 rounded-lg border border-white/10 text-gray-300 font-medium hover:bg-white/5 transition-colors">
-                Star on GitHub
-              </a>
+          <div class="relative overflow-hidden p-8 rounded-2xl bg-gradient-to-br from-purple-900/40 to-violet-900/20 border border-purple-500/25 text-center">
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div class="relative z-10">
+              <h2 class="text-2xl font-bold text-white mb-3">Ready to build with agents?</h2>
+              <p class="text-gray-400 mb-6">Join the community building the future of autonomous development.</p>
+              <div class="flex justify-center gap-4">
+                <a href="#installation" class="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-violet-500 text-white font-medium hover:from-purple-500 hover:to-violet-400 transition-colors shadow-lg shadow-purple-500/25">
+                  Get Started
+                </a>
+                <a href="https://github.com/adi-family" target="_blank" class="px-6 py-3 rounded-lg border border-purple-500/30 text-gray-300 font-medium hover:bg-purple-500/10 transition-colors">
+                  Star on GitHub
+                </a>
+              </div>
             </div>
           </div>
         </section>
