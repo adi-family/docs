@@ -63,6 +63,7 @@
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
+      pointer-events: none;
     }
 
     .sidebar-link {
@@ -85,6 +86,15 @@
     ::-webkit-scrollbar-thumb:hover { background: #2a2a38; }
 
     /* Graph styles */
+    #graph {
+      user-select: none;
+      touch-action: none;
+    }
+    #graph svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
     .node circle {
       stroke-width: 2px;
       cursor: pointer;
@@ -92,6 +102,7 @@
     }
     .node circle:hover {
       stroke-width: 3px;
+      transform: scale(1.2);
     }
     .node text {
       font-size: 10px;
@@ -139,11 +150,30 @@
       gap: 8px;
       font-size: 12px;
       color: #9ca3af;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .legend-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .legend-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .legend-item.inactive {
+      opacity: 0.4;
+    }
+    .legend-item.inactive .legend-dot {
+      background: #4b5563 !important;
     }
     .legend-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
+      transition: background 0.2s ease;
     }
   </style>
 </head>
@@ -219,33 +249,33 @@
             Interactive visualization of dependencies between ADI crates. Click on a node to highlight its dependencies and dependents. Drag nodes to rearrange the layout.
           </p>
 
-          <!-- Legend -->
-          <div class="flex flex-wrap gap-6 p-4 rounded-lg bg-dark-800/50 border border-white/5">
-            <div class="legend-item">
+          <!-- Legend (click to toggle visibility) -->
+          <div id="legend" class="flex flex-wrap gap-2 p-4 rounded-lg bg-dark-800/50 border border-white/5">
+            <div class="legend-item active" data-category="core">
               <div class="legend-dot" style="background: #8b5cf6;"></div>
               <span>Core Libraries</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="shared">
               <div class="legend-dot" style="background: #22c55e;"></div>
               <span>Shared Libraries</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="component">
               <div class="legend-dot" style="background: #3b82f6;"></div>
               <span>Components (Core)</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="interface">
               <div class="legend-dot" style="background: #06b6d4;"></div>
               <span>Interfaces (CLI/HTTP/MCP)</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="plugin">
               <div class="legend-dot" style="background: #f97316;"></div>
               <span>Plugin System</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="ui">
               <div class="legend-dot" style="background: #ec4899;"></div>
               <span>UI Libraries</span>
             </div>
-            <div class="legend-item">
+            <div class="legend-item active" data-category="api">
               <div class="legend-dot" style="background: #eab308;"></div>
               <span>API Clients</span>
             </div>
@@ -253,7 +283,7 @@
         </div>
 
         <!-- Controls -->
-        <div class="flex gap-4 mb-4">
+        <div class="flex flex-wrap gap-4 mb-4 items-center">
           <button id="resetBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
             Reset View
           </button>
@@ -263,16 +293,17 @@
           <button id="zoomOutBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
             Zoom Out
           </button>
-          <select id="filterSelect" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
-            <option value="all">Show All</option>
-            <option value="core">Core Libraries</option>
-            <option value="shared">Shared Libraries</option>
-            <option value="component">Components</option>
-            <option value="interface">Interfaces</option>
-            <option value="plugin">Plugin System</option>
-            <option value="ui">UI Libraries</option>
-            <option value="api">API Clients</option>
-          </select>
+          <button id="fitBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            Fit to Screen
+          </button>
+          <button id="showAllBtn" class="px-4 py-2 text-sm rounded-lg bg-dark-700 border border-white/10 text-gray-300 hover:bg-dark-600 transition-colors">
+            Show All
+          </button>
+          <div class="ml-auto text-xs text-gray-500 flex gap-4">
+            <span><kbd class="px-1.5 py-0.5 bg-dark-600 rounded">Scroll</kbd> Zoom</span>
+            <span><kbd class="px-1.5 py-0.5 bg-dark-600 rounded">Drag</kbd> Pan</span>
+            <span><kbd class="px-1.5 py-0.5 bg-dark-600 rounded">Dbl-click</kbd> Center</span>
+          </div>
         </div>
 
         <!-- Graph container -->
@@ -474,20 +505,37 @@
 
     // Setup SVG
     const container = document.getElementById("graph");
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = container.clientWidth || 800;
+    const height = container.clientHeight || 700;
 
     const svg = d3.select("#graph")
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("viewBox", [0, 0, width, height])
+      .style("cursor", "grab");
 
-    // Add zoom behavior
+    // Background rect for capturing events
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#12121a");
+
+    // Main group that gets transformed
     const g = svg.append("g");
+
+    // Zoom behavior
     const zoom = d3.zoom()
-      .scaleExtent([0.3, 3])
-      .on("zoom", (event) => g.attr("transform", event.transform));
+      .scaleExtent([0.2, 4])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+      });
+
+    // Apply zoom to SVG
     svg.call(zoom);
+
+    // Disable default double-click zoom
+    svg.on("dblclick.zoom", null);
 
     // Arrow marker
     svg.append("defs").append("marker")
@@ -615,9 +663,39 @@
       document.getElementById("infoPanel").classList.add("hidden");
     });
 
+    // Double-click to center on node
+    node.on("dblclick", (event, d) => {
+      event.stopPropagation();
+      const scale = 1.5;
+      const x = width / 2 - d.x * scale;
+      const y = height / 2 - d.y * scale;
+      svg.transition()
+        .duration(500)
+        .call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+    });
+
+    // Double-click on background to reset
+    svg.on("dblclick", () => {
+      svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+    });
+
     function resetHighlight() {
       node.classed("highlighted", false).classed("dimmed", false);
       link.classed("highlighted", false).classed("dimmed", false);
+    }
+
+    // Fit to screen function
+    function fitToScreen() {
+      const bounds = g.node().getBBox();
+      const fullWidth = width;
+      const fullHeight = height;
+      const midX = bounds.x + bounds.width / 2;
+      const midY = bounds.y + bounds.height / 2;
+      const scale = 0.85 / Math.max(bounds.width / fullWidth, bounds.height / fullHeight);
+      const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+      svg.transition()
+        .duration(500)
+        .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
     }
 
     // Controls
@@ -636,16 +714,43 @@
       svg.transition().duration(300).call(zoom.scaleBy, 0.7);
     });
 
-    document.getElementById("filterSelect").addEventListener("change", (e) => {
-      const filter = e.target.value;
-      if (filter === "all") {
-        node.style("display", "block");
-        link.style("display", "block");
-      } else {
-        const visibleNodes = new Set(nodes.filter(n => n.category === filter).map(n => n.id));
-        node.style("display", n => visibleNodes.has(n.id) ? "block" : "none");
-        link.style("display", l => visibleNodes.has(l.source.id) && visibleNodes.has(l.target.id) ? "block" : "none");
-      }
+    document.getElementById("fitBtn").addEventListener("click", fitToScreen);
+
+    // Track visible categories
+    const visibleCategories = new Set(["core", "shared", "component", "interface", "plugin", "ui", "api"]);
+
+    function updateVisibility() {
+      const visibleNodeIds = new Set(nodes.filter(n => visibleCategories.has(n.category)).map(n => n.id));
+      node.style("display", n => visibleNodeIds.has(n.id) ? "block" : "none");
+      link.style("display", l => visibleNodeIds.has(l.source.id) && visibleNodeIds.has(l.target.id) ? "block" : "none");
+    }
+
+    // Legend click handlers
+    document.querySelectorAll("#legend .legend-item").forEach(item => {
+      item.addEventListener("click", () => {
+        const category = item.dataset.category;
+        if (visibleCategories.has(category)) {
+          visibleCategories.delete(category);
+          item.classList.remove("active");
+          item.classList.add("inactive");
+        } else {
+          visibleCategories.add(category);
+          item.classList.add("active");
+          item.classList.remove("inactive");
+        }
+        updateVisibility();
+      });
+    });
+
+    // Show All button
+    document.getElementById("showAllBtn").addEventListener("click", () => {
+      document.querySelectorAll("#legend .legend-item").forEach(item => {
+        const category = item.dataset.category;
+        visibleCategories.add(category);
+        item.classList.add("active");
+        item.classList.remove("inactive");
+      });
+      updateVisibility();
     });
   </script>
 </body>
