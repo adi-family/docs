@@ -133,6 +133,12 @@
         <a href="#knowledgebase" class="sidebar-link block px-3 py-2 rounded-lg">Knowledgebase</a>
         <a href="#tasks" class="sidebar-link block px-3 py-2 rounded-lg">Task Manager</a>
 
+        <div class="px-3 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Libraries</div>
+        <a href="#lib-core" class="sidebar-link block px-3 py-2 rounded-lg">Core Libraries</a>
+        <a href="#lib-llm" class="sidebar-link block px-3 py-2 rounded-lg">LLM Providers</a>
+        <a href="#lib-plugin" class="sidebar-link block px-3 py-2 rounded-lg">Plugin System</a>
+        <a href="#lib-ui" class="sidebar-link block px-3 py-2 rounded-lg">UI Libraries</a>
+
         <div class="px-3 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">API Reference</div>
         <a href="#cli" class="sidebar-link block px-3 py-2 rounded-lg">CLI Commands</a>
         <a href="#mcp" class="sidebar-link block px-3 py-2 rounded-lg">MCP Servers</a>
@@ -623,6 +629,245 @@ task_03  low        pending   Update documentation</span>
 
 <span class="text-gray-500"># Assign to agent</span>
 <span class="text-accent-400">adi</span> agent assign task_01</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Core Libraries -->
+        <section id="lib-core" class="mb-20">
+          <h2 class="text-2xl font-bold text-white mb-6">Core Libraries</h2>
+          <p class="text-gray-400 mb-6">Shared infrastructure libraries powering the ADI ecosystem.</p>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-embed</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Shared embedding library for ADI tools. Provides unified interface for generating text embeddings across providers.</p>
+              <code class="text-xs text-accent-400">cargo add lib-embed</code>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-migrations</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Database migration framework for ADI components. SQLite-focused with versioned migrations.</p>
+              <code class="text-xs text-accent-400">cargo add lib-migrations</code>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-cli-common</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Core</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Common CLI utilities for ADI tools. Argument parsing, output formatting, and shared CLI patterns.</p>
+              <code class="text-xs text-accent-400">cargo add lib-cli-common</code>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-github-client</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Async GitHub API client with pluggable authentication. Supports token, basic, and custom auth strategies. Full coverage of repos, branches, content, releases, and Git Data API.</p>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>use lib_github_client::{Client, token};
+
+let client = Client::new(token("ghp_xxx"))?;
+let repo = client.get_repo("owner", "repo").await?;</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- LLM Providers -->
+        <section id="lib-llm" class="mb-20">
+          <h2 class="text-2xl font-bold text-white mb-6">LLM Provider Libraries</h2>
+          <p class="text-gray-400 mb-6">Client libraries and routing for multiple LLM providers.</p>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-llm-providers</h3>
+                <span class="px-2 py-0.5 text-xs text-accent-400 bg-accent-500/10 rounded">Featured</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">LLM provider implementations and routing for adi-agent-loop. Supports Claude, OpenAI, and Ollama with advanced routing patterns.</p>
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <div class="p-2 rounded bg-dark-700/50 text-center">
+                  <div class="text-sm text-white">Providers</div>
+                  <div class="text-xs text-gray-500">Claude, OpenAI, Ollama</div>
+                </div>
+                <div class="p-2 rounded bg-dark-700/50 text-center">
+                  <div class="text-sm text-white">Routers</div>
+                  <div class="text-xs text-gray-500">Fallback, Cost-Aware, Load-Balanced</div>
+                </div>
+              </div>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>use lib_llm_providers::{ClaudeProvider, FallbackProvider};
+
+let fallback = FallbackProvider::new(vec![
+    Arc::new(ClaudeProvider::new("key")),
+    Arc::new(OpenAiProvider::new("key")),
+]);</code></pre>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-anthropic-client</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
+              </div>
+              <p class="text-gray-500 text-sm">Anthropic Claude API client library. Direct API access for Claude models.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-openai-client</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
+              </div>
+              <p class="text-gray-500 text-sm">OpenAI API client library. Supports GPT-4o, o1, and compatible APIs.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-ollama-client</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">API Client</span>
+              </div>
+              <p class="text-gray-500 text-sm">Ollama API client library. Connect to local Ollama instances for llama, mistral, and other open models.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Plugin System -->
+        <section id="lib-plugin" class="mb-20">
+          <h2 class="text-2xl font-bold text-white mb-6">Plugin System Libraries</h2>
+          <p class="text-gray-400 mb-6">A complete plugin system with stable ABI, registry, and verification.</p>
+
+          <div class="space-y-4">
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-plugin-host</h3>
+                <span class="px-2 py-0.5 text-xs text-accent-400 bg-accent-500/10 rounded">Main Entry</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Plugin host for loading and managing plugins. The main integration crate that applications use. Scans, downloads, loads, and manages plugin lifecycle.</p>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>use lib_plugin_host::{PluginHost, PluginConfig};
+
+let mut host = PluginHost::new(config)?;
+host.scan_installed()?;
+host.install_plugin("vendor.plugin", "1.0.0").await?;
+host.enable("vendor.plugin")?;</code></pre>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-plugin-abi</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">ABI</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Stable ABI definitions for the plugin system. Uses <code class="text-accent-400">abi_stable</code> for binary compatibility across Rust versions. Defines PluginInfo, PluginVTable, PluginContext, HostVTable.</p>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>use lib_plugin_abi::*;
+
+static VTABLE: PluginVTable = PluginVTable {
+    info: plugin_info,
+    init: plugin_init,
+    cleanup: plugin_cleanup,
+    // ...
+};</code></pre>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-plugin-manifest</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Parser</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Plugin manifest parsing. Supports <code class="text-accent-400">plugin.toml</code> (single plugins) and <code class="text-accent-400">package.toml</code> (multi-plugin packages). Handles dependencies and install order.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-plugin-registry</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Client</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">Plugin registry HTTP client. Async client for fetching plugins from registry servers. Supports caching, search, and progress-tracked downloads.</p>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>let client = RegistryClient::new("https://plugins.adi.dev")
+    .with_cache(PathBuf::from("~/.cache/plugins"));
+
+let results = client.search("theme", SearchKind::All).await?;</code></pre>
+              </div>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">lib-plugin-verify</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Security</span>
+              </div>
+              <p class="text-gray-500 text-sm">Plugin signature and checksum verification. SHA256 checksums for integrity, Ed25519 signatures for authenticity.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-white font-medium">adi-plugin-registry-http</h3>
+                <span class="px-2 py-0.5 text-xs text-gray-500 bg-dark-700 rounded">Server</span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">HTTP server for hosting plugin registries. Docker-ready with search, publish, and download endpoints.</p>
+              <div class="mt-3 p-3 rounded-lg bg-dark-700/50">
+                <pre class="text-xs text-gray-300"><code>docker run -d -p 8080:8080 -v registry-data:/data \
+  ghcr.io/mgorunuch/adi-plugin-registry:latest</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- UI Libraries -->
+        <section id="lib-ui" class="mb-20">
+          <h2 class="text-2xl font-bold text-white mb-6">UI Libraries</h2>
+          <p class="text-gray-400 mb-6">Framework-agnostic UI utilities for building terminal and desktop applications.</p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-color</h3>
+              <p class="text-gray-500 text-sm">Unified color type with lazy conversion. Supports RGB, RGBA, and Hex formats with seamless interop.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-animation</h3>
+              <p class="text-gray-500 text-sm">UI animation utilities. Easing functions, spring physics, and animation manager for smooth transitions.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-terminal-theme</h3>
+              <p class="text-gray-500 text-sm">Terminal color themes and typography. Framework-agnostic theme definitions with layout, overlay, and animation configs.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-terminal-grid</h3>
+              <p class="text-gray-500 text-sm">VTE terminal emulation with grid, parser, and PTY support. Full ANSI escape sequence parsing.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-syntax-highlight</h3>
+              <p class="text-gray-500 text-sm">Semantic syntax highlighting tokenizer. Framework-agnostic token stream for code rendering.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-json-tree</h3>
+              <p class="text-gray-500 text-sm">JSON tree view state management. Expandable/collapsible nodes with path tracking.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">lib-iced-ui</h3>
+              <p class="text-gray-500 text-sm">Reusable iced UI components. Buttons, cards, pills, tabs, inputs with consistent styling.</p>
+            </div>
+
+            <div class="p-5 rounded-xl bg-dark-800/50 border border-white/5">
+              <h3 class="text-white font-medium mb-2">debug-metal-shader</h3>
+              <p class="text-gray-500 text-sm">Debug app for Metal shader development and GPU text rendering research. macOS only.</p>
             </div>
           </div>
         </section>
