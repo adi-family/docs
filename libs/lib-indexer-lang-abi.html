@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lib-indexer-lang-abi - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #1a1a24 !important; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent !important; padding: 0; font-size: 0.875rem; }
+    .prose pre[class*="language-"] { background: #1a1a24 !important; }
+    code[class*="language-"], pre[class*="language-"] { text-shadow: none !important; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Library</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<h1>lib-indexer-lang-abi</h1>
+
+<p>FFI-safe types and service contract for ADI indexer language plugins.</p>
+
+<h2>Adding a New Language Plugin</h2>
+
+<h3>1. Create the crate</h3>
+
+<pre><code class="language-bash">
+<p>cargo new --lib adi-lang-<language></p>
+</code></pre>
+
+<h3>2. Configure Cargo.toml</h3>
+
+<pre><code class="language-toml">
+<p>[package]</p>
+<p>name = "adi-lang-<language>"</p>
+<p>version = "0.1.0"</p>
+<p>edition = "2021"</p>
+
+<p>[lib]</p>
+<p>crate-type = ["cdylib"]</p>
+
+<p>[dependencies]</p>
+<p>lib-plugin-abi = { path = "../lib-plugin-abi" }</p>
+<p>lib-indexer-lang-abi = { path = "../lib-indexer-lang-abi" }</p>
+<p>abi_stable = "0.11"</p>
+<p>serde = { version = "1.0", features = ["derive"] }</p>
+<p>serde_json = "1.0"</p>
+<p>tree-sitter = "0.25"</p>
+<p>tree-sitter-<language> = "<version>"  # Find on crates.io</p>
+<p>once_cell = "1.19"</p>
+</code></pre>
+
+<h3>3. Create plugin.toml</h3>
+
+<pre><code class="language-toml">
+<p>[plugin]</p>
+<p>id = "adi.lang.<language>"</p>
+<p>name = "<Language> Language Support"</p>
+<p>version = "0.1.0"</p>
+<p>api_version = 2</p>
+
+<p>[provides]</p>
+<p>services = ["adi.indexer.lang.<language>"]</p>
+</code></pre>
+
+<h3>4. Create src/lib.rs</h3>
+
+<pre><code class="language-rust">
+<p>use abi_stable::std_types::{RString, RVec};</p>
+<p>use lib_plugin_abi::{PluginDeclaration, PluginVTable, ServiceHandle, ServiceVTable, PLUGIN_ABI_VERSION};</p>
+<p>use once_cell::sync::Lazy;</p>
+<p>use std::ffi::CStr;</p>
+
+<p>mod analyzer;</p>
+
+<p>static PLUGIN_INFO: Lazy<PluginDeclaration> = Lazy::new(|| PluginDeclaration {</p>
+<p>    abi_version: PLUGIN_ABI_VERSION,</p>
+<p>    plugin_id: RString::from("adi.lang.<language>"),</p>
+<p>    plugin_version: RString::from("0.1.0"),</p>
+<p>    api_version: 2,</p>
+<p>});</p>
+
+<p>#[no_mangle]</p>
+<p>pub extern "C" fn plugin_declaration() -> &amp;'static PluginDeclaration {</p>
+<p>    &amp;PLUGIN_INFO</p>
+<p>}</p>
+
+<p>#[no_mangle]</p>
+<p>pub extern "C" fn plugin_vtable() -> PluginVTable {</p>
+<p>    PluginVTable {</p>
+<p>        init: plugin_init,</p>
+<p>        shutdown: plugin_shutdown,</p>
+<p>        get_services: get_services,</p>
+<p>    }</p>
+<p>}</p>
+
+<p>extern "C" fn plugin_init(_host: *const std::ffi::c_void) -> i32 { 0 }</p>
+<p>extern "C" fn plugin_shutdown() {}</p>
+
+<p>extern "C" fn get_services() -> RVec<ServiceHandle> {</p>
+<p>    let handle = ServiceHandle {</p>
+<p>        service_id: RString::from("adi.indexer.lang.<language>"),</p>
+<p>        version: RString::from("1.0.0"),</p>
+<p>        vtable: ServiceVTable {</p>
+<p>            invoke: service_invoke,</p>
+<p>            get_metadata: service_metadata,</p>
+<p>        },</p>
+<p>    };</p>
+<p>    RVec::from(vec![handle])</p>
+<p>}</p>
+
+<p>extern "C" fn service_metadata() -> RString {</p>
+<p>    RString::from(r#"{"name":"<Language> Analyzer","methods":["get_grammar","extract_symbols","extract_references","get_info"]}"#)</p>
+<p>}</p>
+
+<p>extern "C" fn service_invoke(method: <em>const i8, args: </em>const i8) -> RString {</p>
+<p>    let method = unsafe { CStr::from_ptr(method).to_str().unwrap_or("") };</p>
+<p>    let args = unsafe { CStr::from_ptr(args).to_str().unwrap_or("{}") };</p>
+
+<p>    let result = match method {</p>
+<p>        "get_grammar" => analyzer::get_grammar(),</p>
+<p>        "extract_symbols" => analyzer::extract_symbols(args),</p>
+<p>        "extract_references" => analyzer::extract_references(args),</p>
+<p>        "get_info" => analyzer::get_info(),</p>
+<p>        _ => r#"{"error":"unknown method"}"#.to_string(),</p>
+<p>    };</p>
+<p>    RString::from(result)</p>
+<p>}</p>
+</code></pre>
+
+<h3>5. Create src/analyzer.rs</h3>
+
+<pre><code class="language-rust">
+<p>use lib_indexer_lang_abi::{LocationAbi, ParsedReferenceAbi, ParsedSymbolAbi, ReferenceKindAbi, SymbolKindAbi, VisibilityAbi};</p>
+<p>use tree_sitter::{Language, Parser};</p>
+
+<p>extern "C" { fn tree_sitter_<language>() -> Language; }</p>
+
+<p>pub fn get_grammar() -> String {</p>
+<p>    let lang = unsafe { tree_sitter_<language>() };</p>
+<p>    let ptr = &amp;lang as *const Language as usize;</p>
+<p>    format!(r#"{{"language_ptr":{}}}"#, ptr)</p>
+<p>}</p>
+
+<p>pub fn get_info() -> String {</p>
+<p>    r#"{"language":"<language>","extensions":["<ext>"],"version":"0.1.0"}"#.to_string()</p>
+<p>}</p>
+
+<p>pub fn extract_symbols(args: &amp;str) -> String {</p>
+<p>    let parsed: serde_json::Value = serde_json::from_str(args).unwrap_or_default();</p>
+<p>    let source = parsed["source"].as_str().unwrap_or("");</p>
+
+<p>    let mut parser = Parser::new();</p>
+<p>    let lang = unsafe { tree_sitter_<language>() };</p>
+<p>    parser.set_language(&amp;lang).ok();</p>
+
+<p>    let tree = match parser.parse(source, None) {</p>
+<p>        Some(t) => t,</p>
+<p>        None => return "[]".to_string(),</p>
+<p>    };</p>
+
+<p>    let symbols = extract_symbols_from_tree(source, &amp;tree);</p>
+<p>    serde_json::to_string(&amp;symbols).unwrap_or("[]".to_string())</p>
+<p>}</p>
+
+<p>pub fn extract_references(args: &amp;str) -> String {</p>
+<p>    let parsed: serde_json::Value = serde_json::from_str(args).unwrap_or_default();</p>
+<p>    let source = parsed["source"].as_str().unwrap_or("");</p>
+
+<p>    let mut parser = Parser::new();</p>
+<p>    let lang = unsafe { tree_sitter_<language>() };</p>
+<p>    parser.set_language(&amp;lang).ok();</p>
+
+<p>    let tree = match parser.parse(source, None) {</p>
+<p>        Some(t) => t,</p>
+<p>        None => return "[]".to_string(),</p>
+<p>    };</p>
+
+<p>    let refs = extract_refs_from_tree(source, &amp;tree);</p>
+<p>    serde_json::to_string(&amp;refs).unwrap_or("[]".to_string())</p>
+<p>}</p>
+
+<p>fn extract_symbols_from_tree(source: &amp;str, tree: &amp;tree_sitter::Tree) -> Vec<ParsedSymbolAbi> {</p>
+<p>    let mut symbols = Vec::new();</p>
+<p>    let mut cursor = tree.walk();</p>
+
+<p>    // Walk the tree and extract symbols based on node types</p>
+<p>    // Example for functions:</p>
+<p>    visit_nodes(&amp;mut cursor, source, &amp;mut symbols);</p>
+
+<p>    symbols</p>
+<p>}</p>
+
+<p>fn visit_nodes(cursor: &amp;mut tree_sitter::TreeCursor, source: &amp;str, symbols: &amp;mut Vec<ParsedSymbolAbi>) {</p>
+<p>    loop {</p>
+<p>        let node = cursor.node();</p>
+
+<p>        // Match node types specific to your language</p>
+<p>        // Example: "function_definition", "class_definition", etc.</p>
+<p>        match node.kind() {</p>
+<p>            "function_definition" | "function_item" => {</p>
+<p>                if let Some(name_node) = node.child_by_field_name("name") {</p>
+<p>                    let name = &amp;source[name_node.byte_range()];</p>
+<p>                    symbols.push(ParsedSymbolAbi {</p>
+<p>                        name: name.to_string(),</p>
+<p>                        kind: SymbolKindAbi::Function,</p>
+<p>                        visibility: VisibilityAbi::Public,</p>
+<p>                        location: LocationAbi {</p>
+<p>                            start_byte: node.start_byte(),</p>
+<p>                            end_byte: node.end_byte(),</p>
+<p>                            start_line: node.start_position().row,</p>
+<p>                            start_col: node.start_position().column,</p>
+<p>                            end_line: node.end_position().row,</p>
+<p>                            end_col: node.end_position().column,</p>
+<p>                        },</p>
+<p>                        signature: None,</p>
+<p>                        doc_comment: None,</p>
+<p>                        children: vec![],</p>
+<p>                    });</p>
+<p>                }</p>
+<p>            }</p>
+<p>            // Add more node types...</p>
+<p>            _ => {}</p>
+<p>        }</p>
+
+<p>        if cursor.goto_first_child() {</p>
+<p>            visit_nodes(cursor, source, symbols);</p>
+<p>            cursor.goto_parent();</p>
+<p>        }</p>
+
+<p>        if !cursor.goto_next_sibling() {</p>
+<p>            break;</p>
+<p>        }</p>
+<p>    }</p>
+<p>}</p>
+
+<p>fn extract_refs_from_tree(source: &amp;str, tree: &amp;tree_sitter::Tree) -> Vec<ParsedReferenceAbi> {</p>
+<p>    // Similar pattern - walk tree and extract references</p>
+<p>    vec![]</p>
+<p>}</p>
+</code></pre>
+
+<h3>6. Add to workspace</h3>
+
+<p>In the root <code>Cargo.toml</code>:</p>
+
+<pre><code class="language-toml">
+<p>[workspace]</p>
+<p>members = [</p>
+<p>    # ...</p>
+<p>    "crates/adi-lang-<language>",</p>
+<p>]</p>
+</code></pre>
+
+<h3>7. Build and test</h3>
+
+<pre><code class="language-bash">
+<p>cargo build -p adi-lang-<language></p>
+</code></pre>
+
+<h2>Service Contract</h2>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Args</th>
+<th>Returns</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_grammar</code></td>
+<td><code>{}</code></td>
+<td><code>{"language_ptr": <usize>}</code></td>
+</tr>
+<tr>
+<td><code>get_info</code></td>
+<td><code>{}</code></td>
+<td><code>{"language": "...", "extensions": [...], "version": "..."}</code></td>
+</tr>
+<tr>
+<td><code>extract_symbols</code></td>
+<td><code>{"source": "..."}</code></td>
+<td><code>[ParsedSymbolAbi, ...]</code></td>
+</tr>
+<tr>
+<td><code>extract_references</code></td>
+<td><code>{"source": "..."}</code></td>
+<td><code>[ParsedReferenceAbi, ...]</code></td>
+</tr>
+</tbody></table>
+
+<h2>Types</h2>
+
+<p>See <code>src/types.rs</code> for FFI-safe type definitions:</p>
+<ul>
+<li><code>ParsedSymbolAbi</code> - function, class, struct, etc.</li>
+<li><code>ParsedReferenceAbi</code> - call, import, type reference</li>
+<li><code>SymbolKindAbi</code> - Function, Class, Struct, Enum, etc.</li>
+<li><code>ReferenceKindAbi</code> - Call, Import, TypeReference, etc.</li>
+</ul>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+    });
+  </script>
+</body>
+</html>

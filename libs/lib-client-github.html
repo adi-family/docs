@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lib-client-github - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #1a1a24 !important; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent !important; padding: 0; font-size: 0.875rem; }
+    .prose pre[class*="language-"] { background: #1a1a24 !important; }
+    code[class*="language-"], pre[class*="language-"] { text-shadow: none !important; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Library</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<h1>lib-github-client</h1>
+
+<p>Async GitHub API client for Rust with pluggable authentication strategies.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Async/await support via tokio</li>
+<li>Pluggable authentication (token, basic, custom)</li>
+<li>GitHub Enterprise support</li>
+<li>Typed responses for common GitHub resources</li>
+<li>Comprehensive error handling with rate limit detection</li>
+</ul>
+
+<h2>Installation</h2>
+
+<pre><code class="language-toml">
+<p>[dependencies]</p>
+<p>lib-github-client = { git = "https://github.com/adi-family/lib-github-client" }</p>
+</code></pre>
+
+<h2>Quick Start</h2>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{Client, token};</p>
+
+<p>#[tokio::main]</p>
+<p>async fn main() -> lib_github_client::Result<()> {</p>
+<p>    let client = Client::new(token("ghp_your_token"))?;</p>
+
+<p>    let repo = client.get_repo("rust-lang", "rust").await?;</p>
+<p>    println!("{}: {}", repo.full_name, repo.description.unwrap_or_default());</p>
+
+<p>    Ok(())</p>
+<p>}</p>
+</code></pre>
+
+<h2>Authentication</h2>
+
+<h3>Token Authentication (recommended)</h3>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{Client, token};</p>
+
+<p>let client = Client::new(token("ghp_xxx"))?;</p>
+</code></pre>
+
+<h3>Basic Authentication</h3>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{Client, basic};</p>
+
+<p>let client = Client::new(basic("username", "password"))?;</p>
+</code></pre>
+
+<h3>Builder (for custom options)</h3>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{Client, token};</p>
+
+<p>let client = Client::builder()</p>
+<p>    .auth(token("ghp_xxx"))</p>
+<p>    .base_url("https://github.mycompany.com/api/v3")  // GitHub Enterprise</p>
+<p>    .user_agent("my-app/1.0")</p>
+<p>    .build()?;</p>
+</code></pre>
+
+<h3>Custom Authentication</h3>
+
+<p>Implement the <code>AuthStrategy</code> trait for custom auth mechanisms:</p>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{AuthStrategy, Client, Result};</p>
+<p>use async_trait::async_trait;</p>
+<p>use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION};</p>
+
+<p>struct GitHubAppAuth {</p>
+<p>    jwt: String,</p>
+<p>}</p>
+
+<p>#[async_trait]</p>
+<p>impl AuthStrategy for GitHubAppAuth {</p>
+<p>    async fn apply(&amp;self, headers: &amp;mut HeaderMap) -> Result<()> {</p>
+<p>        headers.insert(</p>
+<p>            AUTHORIZATION,</p>
+<p>            HeaderValue::from_str(&amp;format!("Bearer {}", self.jwt)).unwrap(),</p>
+<p>        );</p>
+<p>        Ok(())</p>
+<p>    }</p>
+<p>}</p>
+
+<p>let client = Client::new(GitHubAppAuth { jwt: "...".into() })?;</p>
+</code></pre>
+
+<h2>API Reference</h2>
+
+<h3>Repository Operations</h3>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_repo(owner, repo)</code></td>
+<td>Get repository details</td>
+</tr>
+<tr>
+<td><code>list_branches(owner, repo)</code></td>
+<td>List all branches</td>
+</tr>
+<tr>
+<td><code>get_branch(owner, repo, branch)</code></td>
+<td>Get specific branch</td>
+</tr>
+</tbody></table>
+
+<pre><code class="language-rust">
+<p>let repo = client.get_repo("owner", "repo").await?;</p>
+<p>let branches = client.list_branches("owner", "repo").await?;</p>
+<p>let main = client.get_branch("owner", "repo", "main").await?;</p>
+</code></pre>
+
+<h3>Content Operations</h3>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_content(owner, repo, path, ref)</code></td>
+<td>Get file content</td>
+</tr>
+<tr>
+<td><code>create_or_update_file(...)</code></td>
+<td>Create or update a file</td>
+</tr>
+</tbody></table>
+
+<pre><code class="language-rust">
+<p>// Get file from specific branch</p>
+<p>let file = client.get_content("owner", "repo", "README.md", Some("main")).await?;</p>
+
+<p>// Create new file</p>
+<p>client.create_or_update_file(</p>
+<p>    "owner", "repo", "path/to/file.txt",</p>
+<p>    "Add new file",           // commit message</p>
+<p>    "file contents here",     // content</p>
+<p>    None,                     // sha (None for new file)</p>
+<p>    Some("main"),             // branch</p>
+<p>).await?;</p>
+
+<p>// Update existing file</p>
+<p>client.create_or_update_file(</p>
+<p>    "owner", "repo", "path/to/file.txt",</p>
+<p>    "Update file",</p>
+<p>    "new contents",</p>
+<p>    Some("abc123..."),        // existing file sha</p>
+<p>    Some("main"),</p>
+<p>).await?;</p>
+</code></pre>
+
+<h3>Git Data Operations</h3>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_ref(owner, repo, ref_path)</code></td>
+<td>Get a git reference</td>
+</tr>
+<tr>
+<td><code>create_ref(owner, repo, ref_name, sha)</code></td>
+<td>Create a reference</td>
+</tr>
+<tr>
+<td><code>update_ref(owner, repo, ref_path, sha, force)</code></td>
+<td>Update a reference</td>
+</tr>
+<tr>
+<td><code>get_tree(owner, repo, tree_sha, recursive)</code></td>
+<td>Get a tree</td>
+</tr>
+<tr>
+<td><code>create_tree(owner, repo, base_tree, entries)</code></td>
+<td>Create a tree</td>
+</tr>
+<tr>
+<td><code>create_commit(owner, repo, message, tree_sha, parents)</code></td>
+<td>Create a commit</td>
+</tr>
+</tbody></table>
+
+<pre><code class="language-rust">
+<p>// Get branch ref</p>
+<p>let ref_info = client.get_ref("owner", "repo", "heads/main").await?;</p>
+
+<p>// Create new branch</p>
+<p>client.create_ref("owner", "repo", "refs/heads/feature", "sha123").await?;</p>
+
+<p>// Force update branch</p>
+<p>client.update_ref("owner", "repo", "heads/main", "newsha", true).await?;</p>
+
+<p>// Get tree recursively</p>
+<p>let tree = client.get_tree("owner", "repo", "sha123", true).await?;</p>
+
+<p>// Create tree with new files</p>
+<p>use lib_github_client::CreateTreeEntry;</p>
+
+<p>let entries = vec![</p>
+<p>    CreateTreeEntry {</p>
+<p>        path: "file.txt".into(),</p>
+<p>        mode: "100644".into(),</p>
+<p>        content: Some("Hello World".into()),</p>
+<p>        sha: None,</p>
+<p>    },</p>
+<p>];</p>
+<p>let new_tree = client.create_tree("owner", "repo", Some("base_sha"), entries).await?;</p>
+
+<p>// Create commit</p>
+<p>let commit = client.create_commit(</p>
+<p>    "owner", "repo",</p>
+<p>    "Commit message",</p>
+<p>    "tree_sha",</p>
+<p>    vec!["parent_sha"],</p>
+<p>).await?;</p>
+</code></pre>
+
+<h3>User Operations</h3>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>get_authenticated_user()</code></td>
+<td>Get current authenticated user</td>
+</tr>
+</tbody></table>
+
+<pre><code class="language-rust">
+<p>let user = client.get_authenticated_user().await?;</p>
+<p>println!("Logged in as: {}", user.login);</p>
+</code></pre>
+
+<h3>Release Operations</h3>
+
+<table>
+<thead><tr>
+<th>Method</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>list_releases(owner, repo)</code></td>
+<td>List all releases</td>
+</tr>
+<tr>
+<td><code>get_latest_release(owner, repo)</code></td>
+<td>Get latest release</td>
+</tr>
+<tr>
+<td><code>get_release_by_tag(owner, repo, tag)</code></td>
+<td>Get release by tag</td>
+</tr>
+<tr>
+<td><code>list_release_assets(owner, repo, release_id)</code></td>
+<td>List release assets</td>
+</tr>
+<tr>
+<td><code>download_asset(url)</code></td>
+<td>Download asset binary</td>
+</tr>
+</tbody></table>
+
+<pre><code class="language-rust">
+<p>// Get latest release</p>
+<p>let latest = client.get_latest_release("owner", "repo").await?;</p>
+
+<p>// Get specific release</p>
+<p>let release = client.get_release_by_tag("owner", "repo", "v1.0.0").await?;</p>
+
+<p>// Download asset</p>
+<p>let assets = client.list_release_assets("owner", "repo", release.id).await?;</p>
+<p>let binary = client.download_asset(&amp;assets[0].browser_download_url).await?;</p>
+</code></pre>
+
+<h2>Types</h2>
+
+<h3>Repository</h3>
+
+<pre><code class="language-rust">
+<p>pub struct Repository {</p>
+<p>    pub id: u64,</p>
+<p>    pub name: String,</p>
+<p>    pub full_name: String,</p>
+<p>    pub description: Option<String>,</p>
+<p>    pub private: bool,</p>
+<p>    pub fork: bool,</p>
+<p>    pub html_url: String,</p>
+<p>    pub clone_url: String,</p>
+<p>    pub ssh_url: String,</p>
+<p>    pub default_branch: String,</p>
+<p>    pub stargazers_count: u64,</p>
+<p>    pub forks_count: u64,</p>
+<p>    pub open_issues_count: u64,</p>
+<p>}</p>
+</code></pre>
+
+<h3>Branch</h3>
+
+<pre><code class="language-rust">
+<p>pub struct Branch {</p>
+<p>    pub name: String,</p>
+<p>    pub commit: CommitRef,</p>
+<p>    pub protected: bool,</p>
+<p>}</p>
+
+<p>pub struct CommitRef {</p>
+<p>    pub sha: String,</p>
+<p>    pub url: String,</p>
+<p>}</p>
+</code></pre>
+
+<h3>User</h3>
+
+<pre><code class="language-rust">
+<p>pub struct User {</p>
+<p>    pub id: u64,</p>
+<p>    pub login: String,</p>
+<p>    pub name: Option<String>,</p>
+<p>    pub email: Option<String>,</p>
+<p>    pub avatar_url: String,</p>
+<p>    pub html_url: String,</p>
+<p>}</p>
+</code></pre>
+
+<h3>FileContent</h3>
+
+<pre><code class="language-rust">
+<p>pub struct FileContent {</p>
+<p>    pub name: String,</p>
+<p>    pub path: String,</p>
+<p>    pub sha: String,</p>
+<p>    pub size: u64,</p>
+<p>    pub content: Option<String>,       // base64 encoded</p>
+<p>    pub encoding: Option<String>,</p>
+<p>    pub download_url: Option<String>,</p>
+<p>}</p>
+</code></pre>
+
+<h3>Tree</h3>
+
+<pre><code class="language-rust">
+<p>pub struct Tree {</p>
+<p>    pub sha: String,</p>
+<p>    pub tree: Vec<TreeEntry>,</p>
+<p>    pub truncated: bool,</p>
+<p>}</p>
+
+<p>pub struct TreeEntry {</p>
+<p>    pub path: String,</p>
+<p>    pub mode: String,        // "100644" (file), "100755" (executable), "040000" (dir), "160000" (submodule)</p>
+<p>    pub sha: String,</p>
+<p>    pub entry_type: String,  // "blob", "tree", "commit"</p>
+<p>    pub size: Option<u64>,</p>
+<p>}</p>
+
+<p>pub struct CreateTreeEntry {</p>
+<p>    pub path: String,</p>
+<p>    pub mode: String,</p>
+<p>    pub content: Option<String>,  // for new files</p>
+<p>    pub sha: Option<String>,      // for existing blobs</p>
+<p>}</p>
+</code></pre>
+
+<h3>Reference</h3>
+
+<pre><code class="language-rust">
+<p>pub struct Reference {</p>
+<p>    pub ref_name: String,</p>
+<p>    pub node_id: String,</p>
+<p>    pub url: String,</p>
+<p>    pub object: RefObject,</p>
+<p>}</p>
+
+<p>pub struct RefObject {</p>
+<p>    pub sha: String,</p>
+<p>    pub object_type: String,</p>
+<p>    pub url: String,</p>
+<p>}</p>
+</code></pre>
+
+<h3>Release</h3>
+
+<pre><code class="language-rust">
+<p>pub struct Release {</p>
+<p>    pub id: u64,</p>
+<p>    pub tag_name: String,</p>
+<p>    pub name: Option<String>,</p>
+<p>    pub body: Option<String>,</p>
+<p>    pub draft: bool,</p>
+<p>    pub prerelease: bool,</p>
+<p>    pub html_url: String,</p>
+<p>    pub tarball_url: Option<String>,</p>
+<p>    pub zipball_url: Option<String>,</p>
+<p>}</p>
+
+<p>pub struct ReleaseAsset {</p>
+<p>    pub id: u64,</p>
+<p>    pub name: String,</p>
+<p>    pub content_type: String,</p>
+<p>    pub size: u64,</p>
+<p>    pub download_count: u64,</p>
+<p>    pub browser_download_url: String,</p>
+<p>}</p>
+</code></pre>
+
+<h2>Error Handling</h2>
+
+<pre><code class="language-rust">
+<p>use lib_github_client::{GitHubError, Result};</p>
+
+<p>match client.get_repo("owner", "repo").await {</p>
+<p>    Ok(repo) => println!("Found: {}", repo.name),</p>
+<p>    Err(GitHubError::NotFound(_)) => println!("Repository not found"),</p>
+<p>    Err(GitHubError::Unauthorized) => println!("Invalid token"),</p>
+<p>    Err(GitHubError::Forbidden) => println!("No access to repository"),</p>
+<p>    Err(GitHubError::RateLimited { retry_after }) => {</p>
+<p>        println!("Rate limited, retry after {} seconds", retry_after);</p>
+<p>    }</p>
+<p>    Err(GitHubError::Api { status, message }) => {</p>
+<p>        println!("API error {}: {}", status, message);</p>
+<p>    }</p>
+<p>    Err(e) => println!("Error: {}", e),</p>
+<p>}</p>
+</code></pre>
+
+<h3>Error Types</h3>
+
+<table>
+<thead><tr>
+<th>Error</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>Request</code></td>
+<td>HTTP transport error</td>
+</tr>
+<tr>
+<td><code>Api { status, message }</code></td>
+<td>GitHub API error response</td>
+</tr>
+<tr>
+<td><code>RateLimited { retry_after }</code></td>
+<td>Rate limit exceeded</td>
+</tr>
+<tr>
+<td><code>NotFound</code></td>
+<td>Resource not found (404)</td>
+</tr>
+<tr>
+<td><code>Unauthorized</code></td>
+<td>Invalid or expired token (401)</td>
+</tr>
+<tr>
+<td><code>Forbidden</code></td>
+<td>Insufficient permissions (403)</td>
+</tr>
+<tr>
+<td><code>Json</code></td>
+<td>JSON parsing error</td>
+</tr>
+</tbody></table>
+
+<h2>License</h2>
+
+<p>BSL-1.1</p>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+    });
+  </script>
+</body>
+</html>

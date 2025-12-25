@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>adi-cli - adi-family docs</title>
+  <title>adi-lang-swift - adi-family docs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -92,67 +92,80 @@
             <span>Back to docs</span>
           </a>
         </div>
-        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">CLI</span>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Library</span>
       </div>
     </header>
 
     <main class="max-w-4xl mx-auto px-8 py-12">
       <div class="prose">
-<p>adi-cli, rust, plugin-manager, plugin-registry, mcp-server, http-server, cross-platform</p>
+<h1>adi-lang-swift</h1>
 
-<h2>Overview</h2>
+<p>Swift language support plugin for ADI indexer.</p>
+
+<h2>Features</h2>
+
 <ul>
-<li>ADI CLI Manager - installs and manages plugins from registry</li>
-<li>Binary name: <code>adi</code> (run as <code>adi <command></code>)</li>
-<li>Plugin registry: https://adi-plugin-registry.the-ihor.com</li>
-<li>License: BSL-1.0</li>
+<li>Full Swift syntax parsing via tree-sitter-swift</li>
+<li>Symbol extraction: classes, structs, enums, protocols, functions</li>
+<li>Reference tracking: function calls, type references, imports</li>
+<li>Access control detection: public, private, internal, fileprivate, open</li>
 </ul>
 
-<h2>Commands</h2>
+<h2>Supported Constructs</h2>
+
+<table>
+<thead><tr>
+<th>Symbol Type</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td>Class</td>
+<td>Class definitions with inheritance</td>
+</tr>
+<tr>
+<td>Struct</td>
+<td>Struct definitions</td>
+</tr>
+<tr>
+<td>Enum</td>
+<td>Enum with associated values</td>
+</tr>
+<tr>
+<td>Protocol</td>
+<td>Protocol definitions</td>
+</tr>
+<tr>
+<td>Extension</td>
+<td>Type extensions</td>
+</tr>
+<tr>
+<td>Function</td>
+<td>Standalone and member functions</td>
+</tr>
+<tr>
+<td>Property</td>
+<td>Stored and computed properties</td>
+</tr>
+<tr>
+<td>Typealias</td>
+<td>Type aliases</td>
+</tr>
+</tbody></table>
+
+<h2>File Extensions</h2>
+
 <ul>
-<li><code>adi search <query></code> - Search plugins/packages in registry</li>
-<li><code>adi plugin list</code> - List all available plugins from registry</li>
-<li><code>adi plugin installed</code> - List installed plugins</li>
-<li><code>adi plugin install <plugin-id></code> - Install a plugin</li>
-<li><code>adi plugin update <plugin-id></code> - Update a plugin</li>
-<li><code>adi plugin update-all</code> - Update all installed plugins</li>
-<li><code>adi plugin uninstall <plugin-id></code> - Uninstall a plugin</li>
-<li><code>adi mcp</code> - Start MCP server (JSON-RPC over stdio)</li>
-<li><code>adi http</code> - Start HTTP server for plugin-provided routes</li>
-<li><code>adi services</code> - List registered services from loaded plugins</li>
-<li><code>adi run [plugin-id]</code> - Run a plugin's CLI interface (lists runnable plugins if omitted)</li>
-<li><code>adi self-update</code> - Update adi CLI itself</li>
+<li><code>.swift</code></li>
 </ul>
 
-<h2>Architecture</h2>
-<ul>
-<li>Plugin-based system using dynamic libraries (cdylib)</li>
-<li>Plugin loading via <code>lib-plugin-host</code> crate</li>
-<li>Service registry for inter-plugin communication (JSON-RPC)</li>
-<li>MCP server dispatches to <code>adi.mcp.tools</code> and <code>adi.mcp.resources</code> services</li>
-<li>HTTP server dispatches to <code>adi.http.routes</code> services</li>
-<li>CLI delegates to <code>adi.cli.commands</code> services</li>
-<li>Plugins install to <code>~/.local/share/adi/plugins/</code></li>
-</ul>
+<h2>Usage</h2>
 
-<h2>Key Files</h2>
-<ul>
-<li><code>src/plugin_runtime.rs</code> - PluginRuntime wrapping PluginHost</li>
-<li><code>src/mcp_server.rs</code> - MCP JSON-RPC server over stdio</li>
-<li><code>src/http_server.rs</code> - Axum HTTP server</li>
-<li><code>src/plugin_registry.rs</code> - Plugin download/management</li>
-</ul>
+<p>This plugin is automatically loaded by the ADI indexer when Swift files are detected.</p>
 
-<h2>Environment Variables</h2>
-<ul>
-<li><code>ADI_REGISTRY_URL</code> - Override default plugin registry URL</li>
-</ul>
-
-<h2>Deployment</h2>
-<ul>
-<li>Tag-based GitHub Actions: <code>cli-v{VERSION}</code></li>
-<li>Cross-platform: macOS (Intel/ARM), Linux (x86_64), Windows (x86_64)</li>
-</ul>
+<pre><code class="language-bash">
+<p>adi index --path ./Sources</p>
+<p>adi search "view controller"</p>
+</code></pre>
       </div>
     </main>
 
