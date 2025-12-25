@@ -100,36 +100,186 @@
       <div class="prose">
 <h1>Tarminal Signaling Server</h1>
 
-<p>WebSocket relay server for global sync between Tarminal devices.</p>
+<p>WebSocket relay server for device pairing, sync, and cocoon (containerized worker) access control.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li><strong>Device Pairing</strong> - Pair devices using 6-character codes for sync</li>
+<li><strong>Sync Relay</strong> - Forward sync messages between paired devices</li>
+<li><strong>Secure Device IDs</strong> - HMAC-derived device IDs from client secrets (persistent sessions)</li>
+<li><strong>Token-Based Access Control</strong> - Manage cocoon ownership with access tokens</li>
+<li><strong>Multiple Ownership</strong> - Multiple users can claim ownership of same cocoon</li>
+</ul>
 
 <h2>Deploy</h2>
 
-<pre><code class="language-bash">
-<p>docker build -t tarminal-signaling .</p>
-<p>docker run -p 8080:8080 tarminal-signaling</p>
+<h3>Docker (Recommended)</h3>
+
+<pre><code class="language-bash">docker build -t tarminal-signaling .
+docker run -p 8080:8080 \
+  -e HMAC_SALT="your-random-salt-here" \
+  tarminal-signaling
 </code></pre>
 
-<h2>Update App URLs</h2>
-
-<p>After deploying, update the server URL in:</p>
+<h3>Environment Variables</h3>
 
 <ul>
-<li><code>TarminalNativeiOS/Sources/WebSyncServiceiOS.swift</code></li>
-<li><code>TarminalNative/Sources/WebSyncService.swift</code></li>
+<li><code>PORT</code> - Server port (default: 8080)</li>
+<li><code>HMAC_SALT</code> - Salt for device ID derivation (keep secret, persist across restarts)</li>
 </ul>
 
 <h2>Protocol</h2>
 
-<p>The server uses JSON over WebSocket. Message types:</p>
+<p>The server uses JSON over WebSocket. All messages have a <code>type</code> field.</p>
+
+<h3>Device Registration</h3>
+
+<pre><code class="language-json">{
+  "type": "register",
+  "secret": "your-strong-secret-min-32-chars",
+  "device_id": null  // omit or null for first registration
+}
+
+// On reconnect:
+{
+  "type": "register",
+  "secret": "same-secret-as-before",
+  "device_id": "previously-assigned-id"
+}
+
+// Server response:
+{
+  "type": "registered",
+  "device_id": "deterministic-id-from-hmac"
+}
+</code></pre>
+
+<p><strong>Security</strong>: Server derives <code>device_id = HMAC-SHA256(secret, salt)</code>. Same secret always produces same device ID. On reconnect, server verifies provided device_id matches derived ID to prevent secret theft attacks.</p>
+
+<h3>Device Pairing (For Sync)</h3>
+
+<pre><code class="language-json">// Create pairing code
+{ "type": "create_pairing_code" }
+
+// Server response:
+{ "type": "pairing_code", "code": "ABC123" }
+
+// Use pairing code (on other device)
+{ "type": "use_pairing_code", "code": "ABC123" }
+
+// Server response (both devices):
+{ "type": "paired", "peer_id": "other-device-id" }
+</code></pre>
+
+<h3>Sync Data</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": { /* any JSON data */ }
+}
+</code></pre>
+
+<p>Server forwards payload to paired device as-is.</p>
+
+<h3>Cocoon Ownership (Token-Based Access Control)</h3>
+
+<p>Cocoons are containerized workers. Users authenticate with access tokens to claim ownership and connect.</p>
+
+<h4>Claim Ownership</h4>
+
+<pre><code class="language-json">{
+  "type": "claim_cocoon",
+  "device_id": "cocoon-device-id",
+  "secret": "cocoon-secret",
+  "access_token": "user-jwt-or-token"
+}
+
+// Server response:
+{ "type": "claim_successful", "device_id": "cocoon-device-id" }
+
+// Or error:
+{ "type": "error", "message": "Secret does not match device_id" }
+</code></pre>
+
+<p><strong>Multiple Ownership</strong>: Any number of users can claim the same cocoon by proving secret knowledge. All owners have equal rights.</p>
+
+<h4>Connect to Cocoon</h4>
+
+<pre><code class="language-json">{
+  "type": "connect_to_cocoon",
+  "device_id": "cocoon-device-id",
+  "access_token": "user-jwt-or-token"
+}
+
+// Server response (if owner):
+{ "type": "connected", "device_id": "cocoon-device-id" }
+
+// Or access denied:
+{ "type": "access_denied", "reason": "Only owners can connect" }
+</code></pre>
+
+<p>After connection, <code>sync_data</code> messages are relayed between user and cocoon.</p>
+
+<h4>List My Cocoons</h4>
+
+<pre><code class="language-json">{
+  "type": "list_my_cocoons",
+  "access_token": "user-jwt-or-token"
+}
+
+// Server response:
+{
+  "type": "my_cocoons",
+  "cocoons": [
+    {
+      "device_id": "cocoon-1",
+      "status": "online",
+      "claimed_at": "2025-12-25T10:30:00Z"
+    },
+    {
+      "device_id": "cocoon-2",
+      "status": "offline",
+      "claimed_at": "2025-12-20T15:45:00Z"
+    }
+  ]
+}
+</code></pre>
+
+<h2>Security Model</h2>
+
+<h3>Device Authentication</h3>
 
 <ul>
-<li><code>register</code> - Register device with server</li>
-<li><code>create_pairing_code</code> - Generate 6-char pairing code</li>
-<li><code>use_pairing_code</code> - Pair with another device</li>
-<li><code>sync_data</code> - Forward sync payload to paired device</li>
+<li><strong>Secret Storage</strong>: Clients store strong secrets (min 32 chars)</li>
+<li><strong>Deterministic IDs</strong>: Server derives device ID using HMAC-SHA256</li>
+<li><strong>Verification</strong>: On reconnect, client sends both secret and device_id for verification</li>
+<li><strong>Anti-Theft</strong>: Stolen secret cannot register new device with same ID</li>
 </ul>
 
-<p>See <code>src/main.rs</code> for full protocol details.</p>
+<h3>User Authentication</h3>
+
+<ul>
+<li><strong>Access Tokens</strong>: JWT or OAuth tokens identify users</li>
+<li><strong>Simple Extraction</strong>: Currently treats token as user_id (production should validate JWT)</li>
+<li><strong>Future</strong>: Full JWT validation with signature verification</li>
+</ul>
+
+<h3>Ownership Model</h3>
+
+<ul>
+<li><strong>Claim with Secret</strong>: User proves cocoon ownership by providing secret + token</li>
+<li><strong>Co-Ownership</strong>: Multiple users can claim same cocoon (shared secret)</li>
+<li><strong>Equal Rights</strong>: All owners have identical permissions (no role hierarchy)</li>
+<li><strong>Persistent</strong>: Ownership tracked in server memory (currently, add DB for persistence)</li>
+</ul>
+
+<h2>See Also</h2>
+
+<ul>
+<li><a href="./lib-tarminal-sync.html">lib-tarminal-sync</a> - Protocol definitions and sync messages</li>
+<li>Cocoon - Containerized worker that connects to signaling server</li>
+</ul>
       </div>
     </main>
 

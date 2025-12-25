@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cocoon - adi-family docs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24', 600: '#22222e' },
+            accent: { 500: '#8b5cf6', 400: '#a78bfa', 300: '#c4b5fd' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-toml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .glass { background: rgba(26, 26, 36, 0.7); backdrop-filter: blur(12px); }
+    .gradient-border { position: relative; }
+    .gradient-border::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(139, 92, 246, 0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22222e; border-radius: 4px; }
+
+    /* Markdown content styles */
+    .prose { }
+    .prose h1 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 1rem; margin-top: 2rem; }
+    .prose h2 { font-size: 1.5rem; font-weight: 600; color: white; margin-bottom: 0.75rem; margin-top: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+    .prose h3 { font-size: 1.25rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1.25rem; }
+    .prose h4 { font-size: 1rem; font-weight: 600; color: white; margin-bottom: 0.5rem; margin-top: 1rem; }
+    .prose p { color: #9ca3af; margin-bottom: 1rem; line-height: 1.7; }
+    .prose ul, .prose ol { color: #9ca3af; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .prose li { margin-bottom: 0.5rem; }
+    .prose ul { list-style-type: disc; }
+    .prose ol { list-style-type: decimal; }
+    .prose code:not(pre code) { background: #1a1a24; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #a78bfa; font-size: 0.875rem; }
+    .prose pre { background: #1a1a24 !important; border: 1px solid rgba(255,255,255,0.05); border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin-bottom: 1rem; }
+    .prose pre code { background: transparent !important; padding: 0; font-size: 0.875rem; }
+    .prose pre[class*="language-"] { background: #1a1a24 !important; }
+    code[class*="language-"], pre[class*="language-"] { text-shadow: none !important; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose a:hover { color: #c4b5fd; }
+    .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .prose th { text-align: left; padding: 0.75rem; background: #1a1a24; color: white; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); }
+    .prose td { padding: 0.75rem; color: #9ca3af; border: 1px solid rgba(255,255,255,0.05); }
+    .prose blockquote { border-left: 4px solid #8b5cf6; padding-left: 1rem; margin-left: 0; color: #9ca3af; font-style: italic; }
+    .prose hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
+    .prose strong { color: white; }
+  </style>
+</head>
+<body class="bg-dark-900 text-gray-300 antialiased">
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-accent-500/20 rounded-full blur-[100px]"></div>
+    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-accent-500/10 rounded-full blur-[100px]"></div>
+  </div>
+
+  <div class="relative min-h-screen">
+    <header class="sticky top-0 z-30 glass border-b border-white/5">
+      <div class="max-w-4xl mx-auto px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span>Back to docs</span>
+          </a>
+        </div>
+        <span class="px-2 py-1 text-xs font-medium text-accent-400 bg-accent-500/10 rounded-full">Executor</span>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 py-12">
+      <div class="prose">
+<h1>Cocoon</h1>
+
+<p>Containerized worker environment that connects to a signaling server for remote command execution and interactive terminal sessions.</p>
+
+<h2>Features</h2>
+
+<ul>
+<li><strong>Simple Commands</strong> - Execute scripts, builds, tests with stdout/stderr capture</li>
+<li><strong>Interactive PTY</strong> - Run vim, htop, tmux, claude, and any TUI application</li>
+<li><strong>Real-Time Sync</strong> - Bidirectional WebSocket communication with low latency</li>
+<li><strong>Secure Sessions</strong> - HMAC-derived device IDs for persistent identity</li>
+<li><strong>Token-Based Access</strong> - Multiple users can claim ownership with access tokens</li>
+<li><strong>Multiple Sessions</strong> - Run concurrent PTY sessions simultaneously</li>
+</ul>
+
+<h2>Use Cases</h2>
+
+<ul>
+<li><strong>Remote Development</strong> - Run development tools in isolated containers</li>
+<li><strong>CI/CD Workers</strong> - Execute build/test jobs with real-time output</li>
+<li><strong>Shared Environments</strong> - Multiple developers access same container (pair programming)</li>
+<li><strong>Cloud Workspaces</strong> - Browser-based terminal access to containerized environments</li>
+</ul>
+
+<h2>Quick Start</h2>
+
+<h3>Docker (Recommended)</h3>
+
+<pre><code class="language-bash"># Run with ephemeral identity (new device ID each restart)
+docker run \
+  -e SIGNALING_SERVER_URL=wss://your-server.com/ws \
+  ghcr.io/adi-family/cocoon:latest
+
+# Run with persistent identity (mount volume for secret storage)
+docker run \
+  -e SIGNALING_SERVER_URL=wss://your-server.com/ws \
+  -v cocoon-data:/cocoon \
+  ghcr.io/adi-family/cocoon:latest
+
+# Run with manual secret (persistent, portable identity)
+docker run \
+  -e SIGNALING_SERVER_URL=wss://your-server.com/ws \
+  -e COCOON_SECRET="$(openssl rand -base64 36)" \
+  ghcr.io/adi-family/cocoon:latest
+</code></pre>
+
+<h3>Build from Source</h3>
+
+<pre><code class="language-bash">cd crates/cocoon
+cargo build --release
+
+# Run
+SIGNALING_SERVER_URL=ws://localhost:8080/ws \
+./target/release/cocoon
+</code></pre>
+
+<h2>Architecture</h2>
+
+<h3>Connection Flow</h3>
+
+<ol>
+<li><strong>Startup</strong>: Cocoon generates or loads strong secret (48 chars, 288 bits entropy)</li>
+<li><strong>Registration</strong>: Connects to signaling server via WebSocket</li>
+<li><strong>Device ID</strong>: Server derives <code>device_id = HMAC-SHA256(secret, salt)</code></li>
+<li><strong>Verification</strong>: On reconnect, server verifies device_id matches secret</li>
+<li><strong>Claiming</strong>: Users claim ownership by proving secret knowledge + access token</li>
+<li><strong>Execution</strong>: Owner sends commands via <code>sync_data</code> messages</li>
+</ol>
+
+<h3>Security Model</h3>
+
+<h4>Device Authentication (Cocoon Identity)</h4>
+
+<ul>
+<li><strong>Secret Generation</strong>: Auto-generated 48-char base64 (288 bits entropy)</li>
+<li><strong>Minimum Strength</strong>: 32 chars, 10 unique chars, no weak patterns</li>
+<li><strong>Deterministic ID</strong>: Same secret always produces same device_id (portable identity)</li>
+<li><strong>Two-Factor Reconnect</strong>: Must provide both secret AND device_id to reconnect</li>
+<li><strong>Anti-Theft</strong>: Stolen secret cannot impersonate without device_id</li>
+</ul>
+
+<h4>User Authentication (Access Control)</h4>
+
+<ul>
+<li><strong>Token-Based</strong>: Users authenticate with JWT or OAuth tokens</li>
+<li><strong>Multiple Owners</strong>: Any number of users can claim ownership with secret</li>
+<li><strong>Equal Rights</strong>: All owners have identical permissions (no role hierarchy)</li>
+<li><strong>Owner-Only Access</strong>: Only owners can connect and send commands</li>
+</ul>
+
+<h4>Claiming Ownership</h4>
+
+<p>When cocoon starts, it displays claiming instructions:</p>
+
+<pre><code class="language-text">✅ Registration confirmed
+🆔 Device ID: a1b2c3d4e5f6...
+
+📋 To claim ownership:
+   Anyone with this secret can become an owner (co-ownership supported)
+
+   WebSocket message:
+   { "type": "claim_cocoon", "device_id": "a1b2c3...", "secret": "kX9m...", "access_token": "YOUR_TOKEN" }
+
+   ⚠️  Share this secret only with trusted co-owners!
+</code></pre>
+
+<p>Multiple users can claim the same cocoon, enabling collaborative access to the same environment.</p>
+
+<h2>Command Protocol</h2>
+
+<p>All commands are sent via <code>sync_data</code> messages with JSON payloads.</p>
+
+<h3>Execute Simple Command</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": {
+    "type": "execute",
+    "command": "npm test",
+    "input": null
+  }
+}
+
+// Response:
+{
+  "type": "sync_data",
+  "payload": {
+    "type": "execute_result",
+    "success": true,
+    "data": {
+      "stdout": "All tests passed!\n",
+      "stderr": "",
+      "exit_code": 0
+    },
+    "files": []
+  }
+}
+</code></pre>
+
+<h3>Attach Interactive PTY</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": {
+    "type": "attach_pty",
+    "command": "vim README.md",
+    "cols": 120,
+    "rows": 30,
+    "env": { "TERM": "xterm-256color" }
+  }
+}
+
+// Response:
+{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_created",
+    "session_id": "550e8400-e29b-41d4-a716-446655440000"
+  }
+}
+
+// Continuous output:
+{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_output",
+    "session_id": "550e8400-...",
+    "data": "\u001b[?1049h\u001b[H..."  // ANSI escape codes
+  }
+}
+</code></pre>
+
+<h3>Send PTY Input (Keystrokes)</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_input",
+    "session_id": "550e8400-...",
+    "data": "iHello World\u001b"  // i (insert mode) + text + ESC
+  }
+}
+</code></pre>
+
+<h3>Resize PTY (Remote Controls Size)</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_resize",
+    "session_id": "550e8400-...",
+    "cols": 160,
+    "rows": 40
+  }
+}
+</code></pre>
+
+<h3>Close PTY Session</h3>
+
+<pre><code class="language-json">{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_close",
+    "session_id": "550e8400-..."
+  }
+}
+
+// Response:
+{
+  "type": "sync_data",
+  "payload": {
+    "type": "pty_exited",
+    "session_id": "550e8400-...",
+    "exit_code": 0
+  }
+}
+</code></pre>
+
+<h2>Environment Variables</h2>
+
+<ul>
+<li><code>SIGNALING_SERVER_URL</code> - WebSocket URL (default: <code>ws://localhost:8080/ws</code>)</li>
+<li><code>COCOON_SECRET</code> - Manual secret for persistent identity (otherwise auto-generated)</li>
+<li><code>RUST_LOG</code> - Log level (e.g., <code>cocoon=debug</code>, <code>info</code>)</li>
+</ul>
+
+<h2>File Persistence</h2>
+
+<ul>
+<li><code>/cocoon/.secret</code> - Strong secret (48 chars, auto-generated if not exists)</li>
+<li><code>/cocoon/.device_id</code> - Server-assigned device ID (saved for reconnection)</li>
+<li><code>/cocoon/output/</code> - Output files from command execution (if needed)</li>
+</ul>
+
+<p><strong>For persistent identity</strong>: Mount <code>/cocoon</code> as a volume so secret and device_id survive container restarts.</p>
+
+<h2>Docker Compose Example</h2>
+
+<pre><code class="language-yaml">version: '3.8'
+
+services:
+  # Signaling server
+  signaling:
+    image: ghcr.io/adi-family/tarminal-signaling-server:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HMAC_SALT=change-this-to-random-salt
+
+  # Cocoon worker (persistent identity)
+  cocoon:
+    image: ghcr.io/adi-family/cocoon:latest
+    environment:
+      - SIGNALING_SERVER_URL=ws://signaling:8080/ws
+    volumes:
+      - cocoon-data:/cocoon  # Persistent secret and device_id
+    depends_on:
+      - signaling
+
+volumes:
+  cocoon-data:
+</code></pre>
+
+<h2>Expected Output</h2>
+
+<h3>First Start (New Identity)</h3>
+
+<pre><code class="language-text">🐛 Cocoon starting
+🆕 Generated new strong secret (48 characters, 288 bits entropy)
+💾 Saved secret to /cocoon/.secret for persistent sessions
+🔗 Connecting to signaling server: ws://localhost:8080/ws
+⏳ Waiting for derived device ID (first registration)...
+✅ Registration confirmed
+🆔 Device ID: a1b2c3d4e5f6... (HMAC-derived from secret)
+💾 Saved device ID to /cocoon/.device_id for reconnection verification
+
+📋 To claim ownership:
+   WebSocket message:
+   { "type": "claim_cocoon", ... }
+</code></pre>
+
+<h3>Restart (Persistent Identity)</h3>
+
+<pre><code class="language-text">🐛 Cocoon starting
+🔑 Loaded existing secret from /cocoon/.secret
+📱 Loaded existing device ID from /cocoon/.device_id
+🔗 Connecting to signaling server: ws://localhost:8080/ws
+⏳ Reconnecting with device ID verification...
+✅ Registration confirmed
+🆔 Device ID: a1b2c3d4e5f6... (verified - secret matches!)
+</code></pre>
+
+<h2>PTY Support</h2>
+
+<p>Cocoon uses <code>portable-pty</code> for cross-platform pseudo-terminal support. This enables:</p>
+
+<ul>
+<li><strong>TUI Applications</strong>: vim, nano, htop, top, tmux, screen, claude</li>
+<li><strong>Shell Sessions</strong>: bash, zsh, fish with full interactivity</li>
+<li><strong>Color Support</strong>: TERM=xterm-256color for full 256-color palette</li>
+<li><strong>Mouse Events</strong>: Click, scroll, drag in supported applications</li>
+<li><strong>Resize Handling</strong>: Terminal size controlled remotely by client</li>
+</ul>
+
+<h2>Security Best Practices</h2>
+
+<ol>
+<li><strong>Strong Secrets</strong>: Use auto-generated secrets (48 chars) or <code>openssl rand -base64 36</code></li>
+<li><strong>Secret Storage</strong>: Mount volume for persistence, never hardcode in images</li>
+<li><strong>HMAC Salt</strong>: Set unique salt on signaling server, keep secret</li>
+<li><strong>TLS/WSS</strong>: Use <code>wss://</code> in production for encrypted WebSocket</li>
+<li><strong>Token Validation</strong>: Implement proper JWT validation (currently simplified)</li>
+<li><strong>Network Isolation</strong>: Run cocoons in isolated networks, restrict outbound access</li>
+</ol>
+
+<h2>Troubleshooting</h2>
+
+<h3>Connection Issues</h3>
+
+<pre><code class="language-bash"># Check if signaling server is reachable
+curl -I http://your-server:8080/health  # if health endpoint exists
+
+# Enable debug logging
+docker run -e RUST_LOG=cocoon=debug ...
+</code></pre>
+
+<h3>Weak Secret Error</h3>
+
+<pre><code class="language-text">Error: Weak secret rejected by server
+Minimum: 32 characters, 10 unique characters
+No weak patterns: password, admin, 12345, etc.
+
+Solution: Delete /cocoon/.secret and restart (auto-generates strong secret)
+Or set COCOON_SECRET with: openssl rand -base64 36
+</code></pre>
+
+<h3>Device ID Mismatch</h3>
+
+<pre><code class="language-text">Error: Registration rejected - device_id does not match secret
+
+Cause: Secret was changed but device_id file still exists
+Solution: Delete /cocoon/.device_id and restart
+</code></pre>
+
+<h2>See Also</h2>
+
+<ul>
+<li><a href="./tarminal-signaling-server.html">Tarminal Signaling Server</a> - WebSocket relay for device pairing and access control</li>
+<li><a href="./lib-tarminal-sync.html">lib-tarminal-sync</a> - Protocol definitions and sync messages</li>
+<li><a href="./adi-executor.html">adi-executor</a> - High-level task execution orchestration (uses cocoon)</li>
+</ul>
+
+<h2>Name Origin</h2>
+
+<p>"Cocoon" represents a protected, isolated environment where transformation happens. The container wraps around the execution environment like a chrysalis, enabling safe code execution in isolation while maintaining connection to the outside world.</p>
+      </div>
+    </main>
+
+    <footer class="max-w-4xl mx-auto px-8 py-8 border-t border-white/5">
+      <div class="flex items-center justify-between text-sm text-gray-500">
+        <a href="../index.html" class="hover:text-gray-300 transition-colors">Back to documentation</a>
+        <span>adi-family</span>
+      </div>
+    </footer>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+      }
+    });
+  </script>
+</body>
+</html>
